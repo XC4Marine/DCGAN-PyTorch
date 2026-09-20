@@ -24,7 +24,7 @@ params = {
     'nz' : 100,# Size of the Z latent vector (the input to the generator).
     'ngf' : 64,# Size of feature maps in the generator. The depth will be multiples of this.
     'ndf' : 64, # Size of features maps in the discriminator. The depth will be multiples of this.
-    'nepochs' : 10,# Number of training epochs.
+    'nepochs' : 1,# Number of training epochs.
     'lr' : 0.0002,# Learning rate for optimizers
     'beta1' : 0.5,# Beta1 hyperparam for Adam optimizer
     'save_epoch' : 2}# Save step.
@@ -46,11 +46,11 @@ plt.imshow(np.transpose(vutils.make_grid(
 
 plt.show()
 
-# Create the generator.
+# Create the generator. 实例化生成器
 netG = Generator(params).to(device)
 # Apply the weights_init() function to randomly initialize all
 # weights to mean=0.0, stddev=0.2
-netG.apply(weights_init)
+netG.apply(weights_init) #调用初始化函数
 # Print the model.
 print(netG)
 
@@ -97,7 +97,8 @@ for epoch in range(params['nepochs']):
         # Make accumalated gradients of the discriminator zero.
         netD.zero_grad()
         # Create labels for the real data. (label=1)
-        label = torch.full((b_size, ), real_label, device=device)
+        label = torch.full((b_size,), real_label, dtype=torch.float32, device=device)
+
         output = netD(real_data).view(-1)
         errD_real = criterion(output, label)
         # Calculate gradients for backpropagation.

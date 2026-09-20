@@ -2,25 +2,26 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
+# weights_init 函数用于初始化权重，conv层是均值为0，标准差为1的正态分布，bn层是均值为1，标准差为0.02的正态分布，偏置为0。
 def weights_init(w):
     """
     Initializes the weights of the layer, w.
     """
     classname = w.__class__.__name__
-    if classname.find('conv') != -1:
-        nn.init.normal_(w.weight.data, 0.0, 0.02)
-    elif classname.find('bn') != -1:
+    if classname.find('conv') != -1: # 找convolutional layer,找不到则返回-1，找到则返回0
+        nn.init.normal_(w.weight.data, 0.0, 0.02) 
+    elif classname.find('bn') != -1: # batch normalization layer
         nn.init.normal_(w.weight.data, 1.0, 0.02)
         nn.init.constant_(w.bias.data, 0)
 
 # Define the Generator Network
-class Generator(nn.Module):
-    def __init__(self, params):
+class Generator(nn.Module): #father:nn.module son:Genetator
+    def __init__(self, params): #initialize the properties of the father
         super().__init__()
 
         # Input is the latent vector Z.
         self.tconv1 = nn.ConvTranspose2d(params['nz'], params['ngf']*8,
+            #in_channels = nz, out_channels = ngf*8, 4x4 kernel, stride=1, padding=0
             kernel_size=4, stride=1, padding=0, bias=False)
         self.bn1 = nn.BatchNorm2d(params['ngf']*8)
 
@@ -50,7 +51,7 @@ class Generator(nn.Module):
         x = F.relu(self.bn3(self.tconv3(x)))
         x = F.relu(self.bn4(self.tconv4(x)))
 
-        x = F.tanh(self.tconv5(x))
+        x = F.tanh(self.tconv5(x)) #最后一层输出是tanh激活，[-1,1]
 
         return x
 
@@ -86,7 +87,7 @@ class Discriminator(nn.Module):
         x = F.leaky_relu(self.bn2(self.conv2(x)), 0.2, True)
         x = F.leaky_relu(self.bn3(self.conv3(x)), 0.2, True)
         x = F.leaky_relu(self.bn4(self.conv4(x)), 0.2, True)
-
+        #激活函数用LeakyReLU，负半轴有一个0.2的斜率，最后一层输出是sigmoid激活函数，输出为[0,1]，表示真假概率
         x = F.sigmoid(self.conv5(x))
 
         return x
