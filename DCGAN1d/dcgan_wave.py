@@ -24,10 +24,10 @@ class Generator1D(nn.Module):
         self.net = nn.Sequential(
             nn.ConvTranspose1d(ngf * 4, ngf * 2, kernel_size=4, stride=2, padding=1, bias=False),
             nn.BatchNorm1d(ngf * 2),
-            nn.ReLU(True),
+            nn.LeakyReLU(0.2, inplace=True),
             nn.ConvTranspose1d(ngf * 2, ngf, kernel_size=4, stride=2, padding=1, bias=False),
             nn.BatchNorm1d(ngf),
-            nn.ReLU(True),
+            nn.LeakyReLU(0.2, inplace=True),
             nn.ConvTranspose1d(ngf, channels, kernel_size=4, stride=2, padding=1, bias=False),
             nn.Tanh(),
         )

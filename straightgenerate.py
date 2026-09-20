@@ -2,9 +2,9 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 
-from 一维DCGAN.dcgan_wave import Generator1D
+from DCGAN1d.dcgan_wave import Generator1D
 
-checkpoint_path = r"D:\Project_Github\DCGAN-PyTorch\model/baseline_epoch15_validation_selection/best_model_by_validation.pth"
+checkpoint_path = r"D:\Project_Github\DCGAN-PyTorch\DCGAN1d\model\baseline_epoch15_lsgan_weak_discriminator\model_wave_epoch_75.pth"
 
 checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
 params = checkpoint["params"]
