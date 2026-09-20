@@ -18,6 +18,7 @@ celeba.gif
 *.wav
 *.tar.gz
 wavegan/train_click/*
-
+wavegan/log/*
+wavegan/images/
 # 新训练的模型检查点
 model/

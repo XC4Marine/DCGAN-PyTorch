@@ -7,17 +7,17 @@
   "generated_sample_count": 18418,
   "griffin_lim_iterations": 16,
   "feature_wasserstein_distance": {
-    "peak_amplitude": 0.16617759402514876,
-    "peak_to_peak": 0.15509773070292618,
-    "rms": 0.017177413976312863,
-    "peak_location_samples": 0.5861657074600941,
-    "fwhm_samples": 0.03317757985635636,
-    "dominant_frequency_hz": 2027.9074818112706,
-    "spectral_centroid_hz": 958.6730616365597,
-    "spectral_bandwidth_hz": 2995.560888724987
+    "peak_amplitude": 0.16563996482340754,
+    "peak_to_peak": 0.15519957430964118,
+    "rms": 0.017115893341800734,
+    "peak_location_samples": 0.580193289173635,
+    "fwhm_samples": 0.03288747107300438,
+    "dominant_frequency_hz": 1909.1649473341279,
+    "spectral_centroid_hz": 855.1610939546165,
+    "spectral_bandwidth_hz": 2915.673058242188
   },
-  "mean_psd_absolute_error": 0.007780780084431171,
-  "mean_log10_psd_absolute_error": 0.35428157448768616,
+  "mean_psd_absolute_error": 0.0075857192277908325,
+  "mean_log10_psd_absolute_error": 0.35105857253074646,
   "normalized_waveform_nearest_neighbor_l2": {
     "normalization": "per_waveform_minmax_to_minus1_plus1",
     "distance": "l2_over_128_samples",
@@ -26,12 +26,12 @@
       "std_l2": 0.41517090797424316
     },
     "generated_to_real": {
-      "mean_l2": 1.6300667524337769,
-      "std_l2": 0.5079472661018372
+      "mean_l2": 1.633204460144043,
+      "std_l2": 0.5052821636199951
     },
     "real_to_generated": {
-      "mean_l2": 1.280113697052002,
-      "std_l2": 0.39776915311813354
+      "mean_l2": 1.2803958654403687,
+      "std_l2": 0.39703598618507385
     }
   }
 }

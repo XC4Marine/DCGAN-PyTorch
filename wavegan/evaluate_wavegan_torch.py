@@ -163,11 +163,23 @@ def plot_feature_distributions(real_features, generated_features, output_path):
       'peak_amplitude', 'peak_to_peak', 'rms', 'peak_location_samples',
       'fwhm_samples', 'dominant_frequency_hz', 'spectral_centroid_hz', 'spectral_bandwidth_hz',
   ]
+  axis_labels = {
+      'peak_amplitude': 'Peak amplitude (normalized)',
+      'peak_to_peak': 'Peak-to-peak amplitude (normalized)',
+      'rms': 'RMS amplitude (normalized)',
+      'peak_location_samples': 'Peak location (samples)',
+      'fwhm_samples': 'FWHM (samples)',
+      'dominant_frequency_hz': 'Dominant frequency (Hz)',
+      'spectral_centroid_hz': 'Spectral centroid (Hz)',
+      'spectral_bandwidth_hz': 'Spectral bandwidth (Hz)',
+  }
   figure, axes = plt.subplots(3, 3, figsize=(15, 11))
   for axis, name in zip(axes.flat, feature_names):
     axis.hist(real_features[name], bins=50, density=True, alpha=0.55, label='Real', color='#1769aa')
     axis.hist(generated_features[name], bins=50, density=True, alpha=0.55, label='Generated', color='#e76f51')
     axis.set_title(name.replace('_', ' '))
+    axis.set_xlabel(axis_labels[name])
+    axis.set_ylabel('Density')
     axis.grid(alpha=0.2)
     axis.legend()
   axes.flat[-1].axis('off')
