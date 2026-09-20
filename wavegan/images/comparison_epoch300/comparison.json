@@ -1,0 +1,86 @@
+[
+  {
+    "metric": "dominant_frequency_hz",
+    "wavegan": 1441.0359430991437,
+    "specgan": 2027.9074818112706,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 1.4072566971854845
+  },
+  {
+    "metric": "fwhm_samples",
+    "wavegan": 0.3061755503773469,
+    "specgan": 0.03317757985635636,
+    "winner_lower_is_better": "SpecGAN",
+    "specgan_to_wavegan_ratio": 0.10836129735201443
+  },
+  {
+    "metric": "peak_amplitude",
+    "wavegan": 0.07156097884334925,
+    "specgan": 0.16617759402514876,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 2.3221816793328145
+  },
+  {
+    "metric": "peak_location_samples",
+    "wavegan": 0.6600608100770983,
+    "specgan": 0.5861657074600941,
+    "winner_lower_is_better": "SpecGAN",
+    "specgan_to_wavegan_ratio": 0.8880480381673124
+  },
+  {
+    "metric": "peak_to_peak",
+    "wavegan": 0.07473377377128146,
+    "specgan": 0.15509773070292618,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 2.0753365296070037
+  },
+  {
+    "metric": "rms",
+    "wavegan": 0.001955058647952556,
+    "specgan": 0.017177413976312863,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 8.786137435980239
+  },
+  {
+    "metric": "spectral_bandwidth_hz",
+    "wavegan": 315.03812693597405,
+    "specgan": 2995.560888724987,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 9.508566210253598
+  },
+  {
+    "metric": "spectral_centroid_hz",
+    "wavegan": 784.9859723033841,
+    "specgan": 958.6730616365597,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 1.221261392510653
+  },
+  {
+    "metric": "mean_psd_absolute_error",
+    "wavegan": 0.0013085192767903209,
+    "specgan": 0.007780780084431171,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 5.946247963206717
+  },
+  {
+    "metric": "mean_log10_psd_absolute_error",
+    "wavegan": 0.1923830360174179,
+    "specgan": 0.35428157448768616,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 1.8415426943132882
+  },
+  {
+    "metric": "NN L2: generated to real",
+    "wavegan": 1.1340305805206299,
+    "specgan": 1.6300667524337769,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 1.4374098727438358
+  },
+  {
+    "metric": "NN L2: real to generated",
+    "wavegan": 1.2059186697006226,
+    "specgan": 1.280113697052002,
+    "winner_lower_is_better": "WaveGAN",
+    "specgan_to_wavegan_ratio": 1.0615257307275945
+  }
+]

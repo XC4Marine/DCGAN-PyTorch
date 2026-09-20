@@ -10,7 +10,14 @@ venv/
 data/
 
 celeba.gif
-
+*.pt
+*.log
+*.sh
+*.pyc
+*.ipynb_checkpoints
+*.wav
+*.tar.gz
+wavegan/train_click/*
 
 # 新训练的模型检查点
 model/
