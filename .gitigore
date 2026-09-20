@@ -1,0 +1,15 @@
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 虚拟环境
+.venv/
+venv/
+
+# 数据集与训练生成物
+data/
+celeba.gif
+
+
+# 新训练的模型检查点
+model/*.pth
