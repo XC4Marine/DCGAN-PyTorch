@@ -8,8 +8,9 @@ venv/
 
 # 数据集与训练生成物
 data/
+
 celeba.gif
 
 
 # 新训练的模型检查点
-model/*.pth
+model/

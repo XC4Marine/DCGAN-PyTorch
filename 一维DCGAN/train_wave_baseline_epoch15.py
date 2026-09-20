@@ -19,8 +19,8 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from dcgan_wave import Discriminator1D, Generator1D, weights_init
-from utils_wave import WavSegmentDataset, discover_wav_paths
+from 一维DCGAN.dcgan_wave import Discriminator1D, Generator1D, weights_init
+from 一维DCGAN.utils_wave import WavSegmentDataset, discover_wav_paths
 
 
 seed = 369

@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import random
 
-from utils import get_celeba
-from dcgan import weights_init, Generator, Discriminator
+from 源码.utils import get_celeba
+from 源码.dcgan import weights_init, Generator, Discriminator
 
 # Set random seed for reproducibility.
 seed = 369

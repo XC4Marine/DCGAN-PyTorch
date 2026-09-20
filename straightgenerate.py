@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 
-from dcgan_wave import Generator1D
+from 一维DCGAN.dcgan_wave import Generator1D
 
 checkpoint_path = r"D:\Project_Github\DCGAN-PyTorch\model/baseline_epoch15_validation_selection/best_model_by_validation.pth"
 

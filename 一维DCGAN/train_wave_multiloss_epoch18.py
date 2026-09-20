@@ -8,8 +8,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from dcgan_wave import Discriminator1D, Generator1D, weights_init
-from utils_wave import get_wav_dataloader
+from 一维DCGAN.dcgan_wave import Discriminator1D, Generator1D, weights_init
+from 一维DCGAN.utils_wave import get_wav_dataloader
 
 
 seed = 369

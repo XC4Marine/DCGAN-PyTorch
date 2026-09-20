@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import random
 
-from dcgan import Generator
+from 源码.dcgan import Generator
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-load_path', default='model/model_final.pth', help='Checkpoint to load path from')

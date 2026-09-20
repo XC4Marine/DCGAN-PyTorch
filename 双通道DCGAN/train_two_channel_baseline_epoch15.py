@@ -15,7 +15,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
 
-from dcgan_wave import Discriminator1D, Generator1D, weights_init
+from 一维DCGAN.dcgan_wave import Discriminator1D, Generator1D, weights_init
 
 
 class TwoChannelNpyDataset(Dataset):
