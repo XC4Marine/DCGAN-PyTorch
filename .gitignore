@@ -20,5 +20,7 @@ celeba.gif
 wavegan/train_click/*
 wavegan/log/*
 wavegan/images/
+wavegan_improve/images/
+wavegan_improve/log
 # 新训练的模型检查点
 model/

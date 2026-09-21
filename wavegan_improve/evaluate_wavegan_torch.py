@@ -216,6 +216,8 @@ def main():
   parser.add_argument('--num-workers', type=int, default=0)
   parser.add_argument('--device', choices=['auto', 'cuda', 'cpu'], default='auto')
   parser.add_argument('--output-dir', type=Path, default=None)
+  parser.add_argument('--metrics-output', type=Path,
+                      help='Optional JSON metrics path; defaults to output-dir/metrics.json.')
   args = parser.parse_args()
 
   if args.device == 'cuda' and not torch.cuda.is_available():
@@ -262,8 +264,20 @@ def main():
       'mean_psd_absolute_error': psd_absolute_error,
       'mean_log10_psd_absolute_error': psd_log_error,
       'normalized_waveform_nearest_neighbor_l2': nearest_neighbor_metrics,
+      'feature_summary': {
+          'real': {
+              name: {'mean': float(np.mean(real_features[name])), 'std': float(np.std(real_features[name]))}
+              for name in feature_names
+          },
+          'generated': {
+              name: {'mean': float(np.mean(generated_features[name])), 'std': float(np.std(generated_features[name]))}
+              for name in feature_names
+          },
+      },
   }
-  with (output_dir / 'metrics.json').open('w', encoding='utf-8') as metrics_file:
+  metrics_output = args.metrics_output or output_dir / 'metrics.json'
+  metrics_output.parent.mkdir(parents=True, exist_ok=True)
+  with metrics_output.open('w', encoding='utf-8') as metrics_file:
     json.dump(metrics, metrics_file, indent=2, ensure_ascii=False)
   plot_feature_distributions(real_features, generated_features, output_dir / 'feature_distributions.png')
   plot_mean_psd(real_features, generated_features, output_dir / 'mean_psd_comparison.png')

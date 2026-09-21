@@ -1,6 +1,7 @@
 """Train a 128-sample WaveGAN with PyTorch and the bundled click WAV files."""
 
 import argparse
+import json
 from pathlib import Path
 import random
 
@@ -8,6 +9,7 @@ import numpy as np
 from scipy.io import wavfile
 import torch
 from torch import autograd
+from torch.nn import functional as functional
 from torch.optim import Adam
 from torch.utils.data import DataLoader, Dataset
 
@@ -15,6 +17,13 @@ from pytorch_wavegan import WaveGANDiscriminator, WaveGANGenerator, weights_init
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def peak_loss(real_audio, fake_audio):
+  """Return the L1 distance between per-waveform absolute peak amplitudes."""
+  real_peaks = torch.max(torch.abs(real_audio), dim=-1).values
+  fake_peaks = torch.max(torch.abs(fake_audio), dim=-1).values
+  return functional.l1_loss(fake_peaks, real_peaks)
 
 
 def decode_waveform(path, expected_sample_rate):
@@ -96,6 +105,25 @@ def save_checkpoint(path, epoch, generator, discriminator, generator_optimizer, 
   }, str(path))
 
 
+def write_epoch_log(log_file, epoch, alpha, discriminator_losses,
+                    adversarial_losses, peak_losses, total_generator_losses):
+  """Append one machine-readable training summary for an epoch."""
+  def mean_or_none(values):
+    return None if not values else float(np.mean(values))
+
+  record = {
+      'epoch': epoch,
+      'peak_loss_weight': alpha,
+      'mean_discriminator_loss': mean_or_none(discriminator_losses),
+      'mean_generator_adversarial_loss': mean_or_none(adversarial_losses),
+      'mean_generator_peak_loss': mean_or_none(peak_losses),
+      'mean_generator_total_loss': mean_or_none(total_generator_losses),
+      'generator_update_count': len(total_generator_losses),
+  }
+  with log_file.open('a', encoding='utf-8') as handle:
+    handle.write(json.dumps(record, ensure_ascii=False) + '\n')
+
+
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument('--data-dir', type=Path, default=PROJECT_ROOT / 'data' / 'wav')
@@ -108,12 +136,16 @@ def main():
   parser.add_argument('--sample-rate', type=int, default=576000)
   parser.add_argument('--n-critic', type=int, default=5)
   parser.add_argument('--gradient-penalty', type=float, default=10.0)
+  parser.add_argument('--peak-loss-weight', type=float, default=0.0,
+                      help='Alpha multiplying per-waveform peak-amplitude L1 loss in the generator objective.')
   parser.add_argument('--learning-rate', type=float, default=1e-4)
   parser.add_argument('--num-workers', type=int, default=0)
   parser.add_argument('--seed', type=int, default=369)
   parser.add_argument('--device', choices=['auto', 'cuda', 'cpu'], default='auto')
   parser.add_argument('--resume', type=Path)
   parser.add_argument('--checkpoint-every', type=int, default=1)
+  parser.add_argument('--log-file', type=Path,
+                      help='Optional JSONL file receiving one loss summary per epoch.')
   args = parser.parse_args()
 
   random.seed(args.seed)
@@ -161,12 +193,26 @@ def main():
     print('Resumed from {} at epoch {}.'.format(args.resume, start_epoch))
 
   args.output_dir.mkdir(parents=True, exist_ok=True)
+  if args.log_file:
+    args.log_file.parent.mkdir(parents=True, exist_ok=True)
+    with args.log_file.open('w', encoding='utf-8') as handle:
+      handle.write(json.dumps({
+          'type': 'configuration',
+          'peak_loss_weight': args.peak_loss_weight,
+          'epochs': args.epochs,
+          'batch_size': args.batch_size,
+          'seed': args.seed,
+      }, ensure_ascii=False) + '\n')
   fixed_noise = torch.randn(16, args.latent_dim, device=device)
   global_step = 0
   for epoch in range(start_epoch, args.epochs + 1):
     generator.train()
     discriminator.train()
     generator_loss = None
+    epoch_discriminator_losses = []
+    epoch_adversarial_losses = []
+    epoch_peak_losses = []
+    epoch_generator_total_losses = []
     for batch_index, real_waveforms in enumerate(loader, 1):
       real_waveforms = real_waveforms.to(device, non_blocking=True)
       batch_size = real_waveforms.size(0)
@@ -179,13 +225,19 @@ def main():
           + args.gradient_penalty * gradient_penalty(discriminator, real_waveforms, fake_waveforms))
       discriminator_loss.backward()
       discriminator_optimizer.step()
+      epoch_discriminator_losses.append(discriminator_loss.item())
 
       if global_step % args.n_critic == 0:
         generator_optimizer.zero_grad()
         generated_waveforms = generator(torch.randn(batch_size, args.latent_dim, device=device))
-        generator_loss = -discriminator(generated_waveforms).mean()
+        adversarial_loss = -discriminator(generated_waveforms).mean()
+        batch_peak_loss = peak_loss(real_waveforms, generated_waveforms)
+        generator_loss = adversarial_loss + args.peak_loss_weight * batch_peak_loss
         generator_loss.backward()
         generator_optimizer.step()
+        epoch_adversarial_losses.append(adversarial_loss.item())
+        epoch_peak_losses.append(batch_peak_loss.item())
+        epoch_generator_total_losses.append(generator_loss.item())
 
       global_step += 1
       if batch_index % 50 == 0 or batch_index == len(loader):
@@ -194,6 +246,11 @@ def main():
             'Epoch {}/{} | batch {}/{} | D={:.5f} | G={:.5f}'.format(
                 epoch, args.epochs, batch_index, len(loader), discriminator_loss.item(), generator_value),
             flush=True)
+
+    if args.log_file:
+      write_epoch_log(
+          args.log_file, epoch, args.peak_loss_weight, epoch_discriminator_losses,
+          epoch_adversarial_losses, epoch_peak_losses, epoch_generator_total_losses)
 
     if epoch % args.checkpoint_every == 0:
       save_checkpoint(
