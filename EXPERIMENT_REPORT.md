@@ -72,3 +72,33 @@ L_G = BCE(D(G(z)), 1)
 3. 默认最佳权重已位于 `D:\Project_Github\DCGAN-PyTorch\model\model_wave_final.pth`，可由现有生成代码直接加载。
 
 运行环境为 Python 3.14、PyTorch 2.14.0 CPU。固定了 Python 与 PyTorch 的随机种子，但未启用跨平台确定性算法；不同 PyTorch 版本或硬件可能造成数值轻微变化。
+
+
+
+
+# 多分辨率 STFT 损失实验
+
+本实验沿用 `wavegan_improve` 的 WaveGAN-GP 模型和评估指标，仅在生成器目标中加入多分辨率 STFT 损失：
+
+`G_loss = WGAN_G_loss + 2.5 * MR_STFT_loss`
+
+STFT 参数为 `FFT=[32, 64, 128]`、`hop=[8, 16, 32]`。
+
+在仓库根目录运行训练：
+
+```powershell
+python .\wave_improve_dominant_frequency\train_wavegan_torch.py --device cuda --output-dir .\wave_improve_dominant_frequency\checkpoints\mr_stft_2.5 --log-file .\wave_improve_dominant_frequency\log\mr_stft_2.5_epochs.jsonl
+```
+
+训练结束后评估主频 Wasserstein 距离和平均 PSD 误差：
+
+```powershell
+python .\wave_improve_dominant_frequency\evaluate_wavegan_torch.py --checkpoint .\wave_improve_dominant_frequency\checkpoints\mr_stft_2.5\wavegan_epoch_0200.pt --device cuda --output-dir .\wave_improve_dominant_frequency\images\mr_stft_2.5 --metrics-output .\wave_improve_dominant_frequency\log\mr_stft_2.5_metrics.json
+```
+
+权重对比实验依次训练和评估 `0.1, 0.2, ..., 1.0`，为每个权重分别保存 checkpoint、训练日志、评估日志、JSON 指标和评估图，并生成汇总图：
+
+```powershell
+python .\wave_improve_dominant_frequency\run_mr_stft_loss_sweep.py --device cuda
+```
+实验结果不理想,生成的波形愈发扁平
