@@ -1,0 +1,105 @@
+{
+  "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_crest\\checkpoints\\weight_0.6\\wavegan_epoch_0200.pt",
+  "checkpoint_epoch": 200,
+  "sample_rate_hz": 576000,
+  "real_sample_count": 18418,
+  "generated_sample_count": 18418,
+  "feature_wasserstein_distance": {
+    "peak_amplitude": 0.04514090657211538,
+    "peak_to_peak": 0.039643997327100056,
+    "rms": 0.004654841336336413,
+    "peak_location_samples": 1.7042024106851996,
+    "fwhm_samples": 0.09454125774995374,
+    "dominant_frequency_hz": 1303.9689434249117,
+    "spectral_centroid_hz": 1018.9079777280709,
+    "spectral_bandwidth_hz": 1335.641285258416
+  },
+  "mean_psd_absolute_error": 0.0011115979868918657,
+  "mean_log10_psd_absolute_error": 0.2431495189666748,
+  "normalized_waveform_nearest_neighbor_l2": {
+    "normalization": "per_waveform_minmax_to_minus1_plus1",
+    "distance": "l2_over_128_samples",
+    "real_to_real_excluding_self": {
+      "mean_l2": 0.7473723292350769,
+      "std_l2": 0.41517090797424316
+    },
+    "generated_to_real": {
+      "mean_l2": 1.146818995475769,
+      "std_l2": 0.412921279668808
+    },
+    "real_to_generated": {
+      "mean_l2": 1.355858564376831,
+      "std_l2": 0.6235860586166382
+    }
+  },
+  "feature_summary": {
+    "real": {
+      "peak_amplitude": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "peak_to_peak": {
+        "mean": 1.7558996677398682,
+        "std": 0.13494116067886353
+      },
+      "rms": {
+        "mean": 0.1784285604953766,
+        "std": 0.026258010417222977
+      },
+      "peak_location_samples": {
+        "mean": 57.67890107503529,
+        "std": 5.855255483304928
+      },
+      "fwhm_samples": {
+        "mean": 2.3778862404841425,
+        "std": 0.6480766683128563
+      },
+      "dominant_frequency_hz": {
+        "mean": 90073.05353458574,
+        "std": 27342.332702034208
+      },
+      "spectral_centroid_hz": {
+        "mean": 88471.13387834818,
+        "std": 16898.78645375827
+      },
+      "spectral_bandwidth_hz": {
+        "mean": 29421.754821264858,
+        "std": 6270.837109762848
+      }
+    },
+    "generated": {
+      "peak_amplitude": {
+        "mean": 0.9548591375350952,
+        "std": 0.0769636482000351
+      },
+      "peak_to_peak": {
+        "mean": 1.71625554561615,
+        "std": 0.17502258718013763
+      },
+      "rms": {
+        "mean": 0.17822962999343872,
+        "std": 0.02391849085688591
+      },
+      "peak_location_samples": {
+        "mean": 57.89694863720273,
+        "std": 3.3497601507113095
+      },
+      "fwhm_samples": {
+        "mean": 2.4284796427406645,
+        "std": 0.7877932698711011
+      },
+      "dominant_frequency_hz": {
+        "mean": 90935.76935606472,
+        "std": 26190.28741972946
+      },
+      "spectral_centroid_hz": {
+        "mean": 88834.45582751154,
+        "std": 15855.024842441642
+      },
+      "spectral_bandwidth_hz": {
+        "mean": 30596.901605246523,
+        "std": 5614.970265342149
+      }
+    }
+  }
+}
