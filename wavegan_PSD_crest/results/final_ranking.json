@@ -1,0 +1,134 @@
+[
+  {
+    "crest_loss_weight": 0.6,
+    "psd_loss_weight": 0.15000000000000002,
+    "seed_records": [
+      {
+        "crest_loss_weight": 0.6,
+        "psd_loss_weight": 0.15000000000000002,
+        "seed": 369,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.6_psd_0.15\\seed_369\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.13713910901467238,
+        "frequency": -0.4284929031130266,
+        "distribution": 0.046019561468313736,
+        "composite_score": -0.17320415021979507
+      },
+      {
+        "crest_loss_weight": 0.6,
+        "psd_loss_weight": 0.15000000000000002,
+        "seed": 370,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.6_psd_0.15\\seed_370\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.1508638333321501,
+        "frequency": -0.3661045630286729,
+        "distribution": 0.13738650083281875,
+        "composite_score": -0.12652729850933472
+      },
+      {
+        "crest_loss_weight": 0.6,
+        "psd_loss_weight": 0.15000000000000002,
+        "seed": 371,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.6_psd_0.15\\seed_371\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.053445985183855835,
+        "frequency": -0.030378472992878613,
+        "distribution": 0.12141851947021477,
+        "composite_score": 0.012531353764493441
+      }
+    ],
+    "mean_composite_score": -0.09573336498821212,
+    "std_composite_score": 0.07889072237955445,
+    "mean_group_scores": {
+      "time": -0.11381630917689277,
+      "frequency": -0.27499197971152606,
+      "distribution": 0.10160819392378241
+    },
+    "worst_group_score": 0.10160819392378241
+  },
+  {
+    "crest_loss_weight": 1.0,
+    "psd_loss_weight": 0.1,
+    "seed_records": [
+      {
+        "crest_loss_weight": 1.0,
+        "psd_loss_weight": 0.1,
+        "seed": 369,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_1_psd_0.1\\seed_369\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.41286683596311907,
+        "frequency": -0.1072802402749328,
+        "distribution": 0.08673750979923056,
+        "composite_score": -0.1444698554796071
+      },
+      {
+        "crest_loss_weight": 1.0,
+        "psd_loss_weight": 0.1,
+        "seed": 370,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_1_psd_0.1\\seed_370\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.11770283102797965,
+        "frequency": -0.040704559988978886,
+        "distribution": 0.15320709201457722,
+        "composite_score": -0.0017334330007937788
+      },
+      {
+        "crest_loss_weight": 1.0,
+        "psd_loss_weight": 0.1,
+        "seed": 371,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_1_psd_0.1\\seed_371\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.21689621560401345,
+        "frequency": 0.10130210957590206,
+        "distribution": 0.14390991248379473,
+        "composite_score": 0.009438602151894446
+      }
+    ],
+    "mean_composite_score": -0.045588228776168825,
+    "std_composite_score": 0.07006846968978185,
+    "mean_group_scores": {
+      "time": -0.2491552941983707,
+      "frequency": -0.015560896896003212,
+      "distribution": 0.1279515047658675
+    },
+    "worst_group_score": 0.1279515047658675
+  },
+  {
+    "crest_loss_weight": 0.7,
+    "psd_loss_weight": 0.1,
+    "seed_records": [
+      {
+        "crest_loss_weight": 0.7,
+        "psd_loss_weight": 0.1,
+        "seed": 369,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.7_psd_0.1\\seed_369\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.12790840463589606,
+        "frequency": -0.38656099732997884,
+        "distribution": 0.039440992282627034,
+        "composite_score": -0.15834280322774927
+      },
+      {
+        "crest_loss_weight": 0.7,
+        "psd_loss_weight": 0.1,
+        "seed": 370,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.7_psd_0.1\\seed_370\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.15689417216630588,
+        "frequency": -0.17234228823195025,
+        "distribution": 0.1318758716670143,
+        "composite_score": -0.06578686291041395
+      },
+      {
+        "crest_loss_weight": 0.7,
+        "psd_loss_weight": 0.1,
+        "seed": 371,
+        "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.7_psd_0.1\\seed_371\\checkpoints\\wavegan_epoch_0200.pt",
+        "time": -0.05673905098450551,
+        "frequency": 0.33283840473135706,
+        "distribution": 0.12003473472329144,
+        "composite_score": 0.13204469615671435
+      }
+    ],
+    "mean_composite_score": -0.030694989993816285,
+    "std_composite_score": 0.12111923769103582,
+    "mean_group_scores": {
+      "time": -0.11384720926223581,
+      "frequency": -0.07535496027685736,
+      "distribution": 0.09711719955764427
+    },
+    "worst_group_score": 0.09711719955764427
+  }
+]

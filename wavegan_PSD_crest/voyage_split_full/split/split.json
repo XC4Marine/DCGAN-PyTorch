@@ -1,0 +1,32 @@
+{
+  "data_dir": "D:\\Project_Github\\DCGAN-PyTorch\\data\\wav",
+  "selected_click_count": 18418,
+  "test_voyages": [
+    "Voyage_Ori_02",
+    "Voyage_Ori_08",
+    "Voyage_Ori_15"
+  ],
+  "train_voyages": [
+    "Voyage_Ori_01",
+    "Voyage_Ori_03-05",
+    "Voyage_Ori_06",
+    "Voyage_Ori_07",
+    "Voyage_Ori_09",
+    "Voyage_Ori_10",
+    "Voyage_Ori_11",
+    "Voyage_Ori_13",
+    "Voyage_Ori_14",
+    "Voyage_Ori_16-17",
+    "Voyage_Ori_18",
+    "Voyage_Ori_19",
+    "Voyage_Ori_20",
+    "Voyage_Ori_21-26",
+    "Voyage_Ori_27",
+    "Voyage_Ori_28-32",
+    "Voyage_Ori_33-34",
+    "Voyage_Ori_35"
+  ],
+  "train_click_count": 14734,
+  "test_click_count": 3684,
+  "test_fraction": 0.20002171788467804
+}

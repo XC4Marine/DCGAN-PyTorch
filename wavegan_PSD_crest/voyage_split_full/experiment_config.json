@@ -1,0 +1,42 @@
+{
+  "configurations": [
+    [
+      "raw_wavegan",
+      0.0,
+      0.0
+    ],
+    [
+      "crest_only_peak",
+      1.0,
+      0.0
+    ],
+    [
+      "psd_only_log_psd",
+      0.0,
+      0.4
+    ],
+    [
+      "joint_best",
+      0.6,
+      0.15
+    ]
+  ],
+  "seeds": [
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378,
+    379,
+    380,
+    381,
+    382,
+    383
+  ],
+  "split_dir": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\voyage_split_full\\split"
+}

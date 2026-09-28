@@ -1,0 +1,61 @@
+{
+  "crest_loss_weight": 0.6,
+  "psd_loss_weight": 0.15000000000000002,
+  "mean_composite_score": -0.09573336498821212,
+  "std_composite_score": 0.07889072237955445,
+  "mean_group_scores": {
+    "time": -0.11381630917689277,
+    "frequency": -0.27499197971152606,
+    "distribution": 0.10160819392378241
+  },
+  "improvement_percent_relative_to_raw_wavegan": {
+    "time.peak_amplitude": 49.05478244422615,
+    "time.peak_to_peak": 23.93872363807827,
+    "time.rms": -133.5288288183822,
+    "time.fwhm": 77.92275477667584,
+    "time.peak_location": -208.1444991789819,
+    "frequency.psd": -34.01138029444538,
+    "frequency.log_psd": 74.11244438548539,
+    "frequency.dominant_frequency": 7.0865656938799715,
+    "frequency.spectral_centroid": -36.69796748301902,
+    "frequency.spectral_bandwidth": 31.6544470980427,
+    "distribution.generated_to_real_nn_l2": 4.7592018711954855,
+    "distribution.real_to_generated_nn_l2": -29.196987719264783
+  },
+  "seed_scores": [
+    {
+      "crest_loss_weight": 0.6,
+      "psd_loss_weight": 0.15000000000000002,
+      "seed": 369,
+      "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.6_psd_0.15\\seed_369\\checkpoints\\wavegan_epoch_0200.pt",
+      "time": -0.13713910901467238,
+      "frequency": -0.4284929031130266,
+      "distribution": 0.046019561468313736,
+      "composite_score": -0.17320415021979507
+    },
+    {
+      "crest_loss_weight": 0.6,
+      "psd_loss_weight": 0.15000000000000002,
+      "seed": 370,
+      "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.6_psd_0.15\\seed_370\\checkpoints\\wavegan_epoch_0200.pt",
+      "time": -0.1508638333321501,
+      "frequency": -0.3661045630286729,
+      "distribution": 0.13738650083281875,
+      "composite_score": -0.12652729850933472
+    },
+    {
+      "crest_loss_weight": 0.6,
+      "psd_loss_weight": 0.15000000000000002,
+      "seed": 371,
+      "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\runs\\crest_0.6_psd_0.15\\seed_371\\checkpoints\\wavegan_epoch_0200.pt",
+      "time": -0.053445985183855835,
+      "frequency": -0.030378472992878613,
+      "distribution": 0.12141851947021477,
+      "composite_score": 0.012531353764493441
+    }
+  ],
+  "representative_checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\checkpoints\\best\\representative_lowest_score.pt",
+  "joint_simultaneously_beats_raw_crest_psd_controls": true,
+  "beats_crest_only": true,
+  "beats_psd_only": true
+}

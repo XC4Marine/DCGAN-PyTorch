@@ -1,0 +1,37 @@
+{
+  "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\voyage_split_full\\runs\\joint_best\\seed_372\\checkpoints\\wavegan_epoch_0200.pt",
+  "checkpoint_epoch": 200,
+  "evaluation_seed": 369,
+  "sample_rate_hz": 576000,
+  "real_sample_count": 3684,
+  "generated_sample_count": 3684,
+  "feature_wasserstein_distance": {
+    "peak_amplitude": 0.042306423721173686,
+    "peak_to_peak": 0.07726230492550441,
+    "rms": 0.005211356234505175,
+    "peak_location_samples": 2.5906623235613466,
+    "fwhm_samples": 0.09948104315808494,
+    "dominant_frequency_hz": 3142.915309446254,
+    "spectral_centroid_hz": 2347.8966863630285,
+    "spectral_bandwidth_hz": 580.4709063221233,
+    "minus_3db_bandwidth_hz": 2913.2736156351793
+  },
+  "mean_psd_absolute_error": 0.004486262798309326,
+  "mean_log10_psd_absolute_error": 0.09512303024530411,
+  "normalized_waveform_nearest_neighbor_l2": {
+    "normalization": "per_waveform_minmax_to_minus1_plus1",
+    "distance": "l2_over_128_samples",
+    "real_to_real_excluding_self": {
+      "mean_l2": 0.7354100346565247,
+      "std_l2": 0.4321092963218689
+    },
+    "generated_to_real": {
+      "mean_l2": 1.2911139726638794,
+      "std_l2": 0.4499748945236206
+    },
+    "real_to_generated": {
+      "mean_l2": 1.7211641073226929,
+      "std_l2": 0.7325620651245117
+    }
+  }
+}
