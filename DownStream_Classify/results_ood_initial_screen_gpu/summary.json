@@ -1,0 +1,397 @@
+{
+  "ood_positive_count": 153,
+  "threshold": 0.5,
+  "summary": [
+    {
+      "method": "baseline",
+      "method_label": "No augmentation",
+      "generated_count": 0,
+      "positive_count": 600,
+      "negative_count": 600,
+      "runs": 5,
+      "detection_rate_mean": 0.4235294117647059,
+      "detection_rate_std": 0.14005851227167448,
+      "miss_rate_mean": 0.5764705882352941,
+      "mean_positive_probability": 0.41479405370689093,
+      "mean_positive_probability_std": 0.10123756386381554
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 150,
+      "positive_count": 750,
+      "negative_count": 750,
+      "runs": 5,
+      "detection_rate_mean": 0.6509803921568628,
+      "detection_rate_std": 0.04097366802263395,
+      "miss_rate_mean": 0.34901960784313724,
+      "mean_positive_probability": 0.568829395754655,
+      "mean_positive_probability_std": 0.03106632050419345
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 300,
+      "positive_count": 900,
+      "negative_count": 900,
+      "runs": 5,
+      "detection_rate_mean": 0.7163398692810458,
+      "detection_rate_std": 0.07359836998828363,
+      "miss_rate_mean": 0.28366013071895424,
+      "mean_positive_probability": 0.6111487962659369,
+      "mean_positive_probability_std": 0.06869096768679608
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 450,
+      "positive_count": 1050,
+      "negative_count": 1050,
+      "runs": 5,
+      "detection_rate_mean": 0.6901960784313725,
+      "detection_rate_std": 0.07063663312996755,
+      "miss_rate_mean": 0.30980392156862746,
+      "mean_positive_probability": 0.5927291348455375,
+      "mean_positive_probability_std": 0.0543486592313362
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 600,
+      "positive_count": 1200,
+      "negative_count": 1200,
+      "runs": 5,
+      "detection_rate_mean": 0.5973856209150327,
+      "detection_rate_std": 0.21512106572967588,
+      "miss_rate_mean": 0.40261437908496733,
+      "mean_positive_probability": 0.5283917119763822,
+      "mean_positive_probability_std": 0.09708530136542382
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 750,
+      "positive_count": 1350,
+      "negative_count": 1350,
+      "runs": 5,
+      "detection_rate_mean": 0.6339869281045752,
+      "detection_rate_std": 0.1615582626706964,
+      "miss_rate_mean": 0.36601307189542476,
+      "mean_positive_probability": 0.5715038974967244,
+      "mean_positive_probability_std": 0.08076585859567756
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 900,
+      "positive_count": 1500,
+      "negative_count": 1500,
+      "runs": 5,
+      "detection_rate_mean": 0.673202614379085,
+      "detection_rate_std": 0.06370453820136578,
+      "miss_rate_mean": 0.326797385620915,
+      "mean_positive_probability": 0.5617350549902386,
+      "mean_positive_probability_std": 0.04050430600517586
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 1050,
+      "positive_count": 1650,
+      "negative_count": 1650,
+      "runs": 5,
+      "detection_rate_mean": 0.6196078431372548,
+      "detection_rate_std": 0.07766510210464286,
+      "miss_rate_mean": 0.3803921568627452,
+      "mean_positive_probability": 0.5495837684902416,
+      "mean_positive_probability_std": 0.05445410683299884
+    },
+    {
+      "method": "raw_wavegan",
+      "method_label": "Raw WaveGAN",
+      "generated_count": 1197,
+      "positive_count": 1797,
+      "negative_count": 1797,
+      "runs": 5,
+      "detection_rate_mean": 0.6209150326797386,
+      "detection_rate_std": 0.06617142722652482,
+      "miss_rate_mean": 0.3790849673202614,
+      "mean_positive_probability": 0.5434179386744421,
+      "mean_positive_probability_std": 0.04855985423560312
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 150,
+      "positive_count": 750,
+      "negative_count": 750,
+      "runs": 5,
+      "detection_rate_mean": 0.5137254901960785,
+      "detection_rate_std": 0.11531827292794397,
+      "miss_rate_mean": 0.4862745098039215,
+      "mean_positive_probability": 0.5005519627157351,
+      "mean_positive_probability_std": 0.07792055370896409
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 300,
+      "positive_count": 900,
+      "negative_count": 900,
+      "runs": 5,
+      "detection_rate_mean": 0.5111111111111112,
+      "detection_rate_std": 0.10317692685318232,
+      "miss_rate_mean": 0.4888888888888888,
+      "mean_positive_probability": 0.49433526474892336,
+      "mean_positive_probability_std": 0.06145138771832062
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 450,
+      "positive_count": 1050,
+      "negative_count": 1050,
+      "runs": 5,
+      "detection_rate_mean": 0.49673202614379086,
+      "detection_rate_std": 0.10251233425724263,
+      "miss_rate_mean": 0.5032679738562091,
+      "mean_positive_probability": 0.48342564901724316,
+      "mean_positive_probability_std": 0.05431813299459818
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 600,
+      "positive_count": 1200,
+      "negative_count": 1200,
+      "runs": 5,
+      "detection_rate_mean": 0.48496732026143796,
+      "detection_rate_std": 0.16588951194140036,
+      "miss_rate_mean": 0.515032679738562,
+      "mean_positive_probability": 0.459160194436279,
+      "mean_positive_probability_std": 0.11511739882823724
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 750,
+      "positive_count": 1350,
+      "negative_count": 1350,
+      "runs": 5,
+      "detection_rate_mean": 0.3908496732026143,
+      "detection_rate_std": 0.1312407884759334,
+      "miss_rate_mean": 0.6091503267973857,
+      "mean_positive_probability": 0.4012615916906809,
+      "mean_positive_probability_std": 0.0951774426041779
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 900,
+      "positive_count": 1500,
+      "negative_count": 1500,
+      "runs": 5,
+      "detection_rate_mean": 0.43921568627450985,
+      "detection_rate_std": 0.17979203007460018,
+      "miss_rate_mean": 0.5607843137254902,
+      "mean_positive_probability": 0.4494472080503281,
+      "mean_positive_probability_std": 0.10092594089310018
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 1050,
+      "positive_count": 1650,
+      "negative_count": 1650,
+      "runs": 5,
+      "detection_rate_mean": 0.3699346405228758,
+      "detection_rate_std": 0.17400848410241818,
+      "miss_rate_mean": 0.6300653594771242,
+      "mean_positive_probability": 0.4163852953050135,
+      "mean_positive_probability_std": 0.11652761538426674
+    },
+    {
+      "method": "joint_wavegan",
+      "method_label": "PSD+Crest WaveGAN",
+      "generated_count": 1197,
+      "positive_count": 1797,
+      "negative_count": 1797,
+      "runs": 5,
+      "detection_rate_mean": 0.3843137254901961,
+      "detection_rate_std": 0.18091711057025772,
+      "miss_rate_mean": 0.615686274509804,
+      "mean_positive_probability": 0.415972297875052,
+      "mean_positive_probability_std": 0.13121029043987417
+    }
+  ],
+  "paired_comparisons": [
+    {
+      "comparison": "raw_wavegan_g150_minus_baseline",
+      "generated_count": 150,
+      "mean_difference": 0.22745098039215686,
+      "ci95_low": 0.14248366013071898,
+      "ci95_high": 0.3215686274509804
+    },
+    {
+      "comparison": "raw_wavegan_g300_minus_baseline",
+      "generated_count": 300,
+      "mean_difference": 0.29281045751633983,
+      "ci95_low": 0.14771241830065357,
+      "ci95_high": 0.4379084967320262
+    },
+    {
+      "comparison": "raw_wavegan_g450_minus_baseline",
+      "generated_count": 450,
+      "mean_difference": 0.2666666666666667,
+      "ci95_low": 0.12679738562091505,
+      "ci95_high": 0.4117647058823529
+    },
+    {
+      "comparison": "raw_wavegan_g600_minus_baseline",
+      "generated_count": 600,
+      "mean_difference": 0.1738562091503268,
+      "ci95_low": -0.06274509803921566,
+      "ci95_high": 0.3647058823529412
+    },
+    {
+      "comparison": "raw_wavegan_g750_minus_baseline",
+      "generated_count": 750,
+      "mean_difference": 0.21045751633986928,
+      "ci95_low": 0.01307189542483662,
+      "ci95_high": 0.4
+    },
+    {
+      "comparison": "raw_wavegan_g900_minus_baseline",
+      "generated_count": 900,
+      "mean_difference": 0.2496732026143791,
+      "ci95_low": 0.14901960784313723,
+      "ci95_high": 0.35947712418300654
+    },
+    {
+      "comparison": "raw_wavegan_g1050_minus_baseline",
+      "generated_count": 1050,
+      "mean_difference": 0.19607843137254902,
+      "ci95_low": 0.060130718954248354,
+      "ci95_high": 0.33856209150326794
+    },
+    {
+      "comparison": "raw_wavegan_g1197_minus_baseline",
+      "generated_count": 1197,
+      "mean_difference": 0.1973856209150327,
+      "ci95_low": 0.1320261437908497,
+      "ci95_high": 0.3098039215686274
+    },
+    {
+      "comparison": "joint_wavegan_g150_minus_baseline",
+      "generated_count": 150,
+      "mean_difference": 0.09019607843137255,
+      "ci95_low": -0.05620915032679739,
+      "ci95_high": 0.2549019607843137
+    },
+    {
+      "comparison": "joint_wavegan_g300_minus_baseline",
+      "generated_count": 300,
+      "mean_difference": 0.08758169934640525,
+      "ci95_low": -0.07712418300653592,
+      "ci95_high": 0.29150326797385623
+    },
+    {
+      "comparison": "joint_wavegan_g450_minus_baseline",
+      "generated_count": 450,
+      "mean_difference": 0.07320261437908498,
+      "ci95_low": -0.09542483660130717,
+      "ci95_high": 0.2758169934640523
+    },
+    {
+      "comparison": "joint_wavegan_g600_minus_baseline",
+      "generated_count": 600,
+      "mean_difference": 0.06143790849673203,
+      "ci95_low": -0.13464052287581693,
+      "ci95_high": 0.22875816993464052
+    },
+    {
+      "comparison": "joint_wavegan_g750_minus_baseline",
+      "generated_count": 750,
+      "mean_difference": -0.0326797385620915,
+      "ci95_low": -0.15686274509803919,
+      "ci95_high": 0.06274509803921569
+    },
+    {
+      "comparison": "joint_wavegan_g900_minus_baseline",
+      "generated_count": 900,
+      "mean_difference": 0.015686274509803932,
+      "ci95_low": -0.10849673202614378,
+      "ci95_high": 0.15575163398692526
+    },
+    {
+      "comparison": "joint_wavegan_g1050_minus_baseline",
+      "generated_count": 1050,
+      "mean_difference": -0.053594771241830055,
+      "ci95_low": -0.18431372549019606,
+      "ci95_high": 0.09019607843137256
+    },
+    {
+      "comparison": "joint_wavegan_g1197_minus_baseline",
+      "generated_count": 1197,
+      "mean_difference": -0.039215686274509796,
+      "ci95_low": -0.19738562091503267,
+      "ci95_high": 0.11241830065359477
+    },
+    {
+      "comparison": "joint_minus_raw_g150",
+      "generated_count": 150,
+      "mean_difference": -0.13725490196078433,
+      "ci95_low": -0.19869281045751636,
+      "ci95_high": -0.04444444444444441
+    },
+    {
+      "comparison": "joint_minus_raw_g300",
+      "generated_count": 300,
+      "mean_difference": -0.20522875816993463,
+      "ci95_low": -0.25620915032679736,
+      "ci95_high": -0.13464052287581696
+    },
+    {
+      "comparison": "joint_minus_raw_g450",
+      "generated_count": 450,
+      "mean_difference": -0.19346405228758168,
+      "ci95_low": -0.23529411764705882,
+      "ci95_high": -0.12941176470588234
+    },
+    {
+      "comparison": "joint_minus_raw_g600",
+      "generated_count": 600,
+      "mean_difference": -0.11241830065359479,
+      "ci95_low": -0.14771241830065365,
+      "ci95_high": -0.06535947712418302
+    },
+    {
+      "comparison": "joint_minus_raw_g750",
+      "generated_count": 750,
+      "mean_difference": -0.2431372549019608,
+      "ci95_low": -0.34117647058823525,
+      "ci95_high": -0.14901960784313723
+    },
+    {
+      "comparison": "joint_minus_raw_g900",
+      "generated_count": 900,
+      "mean_difference": -0.23398692810457514,
+      "ci95_low": -0.37777777777777777,
+      "ci95_high": -0.08235294117647056
+    },
+    {
+      "comparison": "joint_minus_raw_g1050",
+      "generated_count": 1050,
+      "mean_difference": -0.24967320261437903,
+      "ci95_low": -0.38169934640522873,
+      "ci95_high": -0.1411764705882353
+    },
+    {
+      "comparison": "joint_minus_raw_g1197",
+      "generated_count": 1197,
+      "mean_difference": -0.23660130718954248,
+      "ci95_low": -0.38300653594771245,
+      "ci95_high": -0.0849673202614379
+    }
+  ]
+}

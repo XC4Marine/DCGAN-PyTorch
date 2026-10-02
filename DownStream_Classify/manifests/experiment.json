@@ -1,0 +1,36 @@
+{
+  "selection_seed": 20260929,
+  "latent_seed": 20260929,
+  "test_voyage": "Voyage_Ori_15",
+  "test_negative_voyages": [
+    "Voyage_Ori_08",
+    "Voyage_Ori_15"
+  ],
+  "other_species_split": "sample_level_stratified_round_robin",
+  "nested_generated_counts": [
+    300,
+    600,
+    900,
+    1200
+  ],
+  "wavegan_checkpoints": {
+    "raw_wavegan": "wavegan_PSD_crest/voyage_split_full/runs/raw_wavegan/seed_374/checkpoints/wavegan_epoch_0200.pt",
+    "joint_wavegan": "wavegan_PSD_crest/voyage_split_full/runs/joint_best/seed_374/checkpoints/wavegan_epoch_0200.pt"
+  },
+  "real_positive_quotas_by_voyage": {
+    "Voyage_Ori_01": 50,
+    "Voyage_Ori_02": 465,
+    "Voyage_Ori_03-05": 85
+  },
+  "counts": {
+    "positive_pool": 2000,
+    "selected_real_positive": 600,
+    "train_negative": 1797,
+    "test_positive": 155,
+    "test_negative": 203,
+    "test_negative_background": 188,
+    "test_negative_other_species": 15,
+    "generated_raw_wavegan": 1200,
+    "generated_joint_wavegan": 1200
+  }
+}

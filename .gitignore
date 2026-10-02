@@ -24,3 +24,20 @@ wavegan_improve/images/
 wavegan_improve/log
 # 新训练的模型检查点
 model/
+
+# Downstream classification: keep only reports, summaries, and figures.
+DownStream_Classify/results_balanced_600_gpu/*
+!DownStream_Classify/results_balanced_600_gpu/EXPERIMENT_REPORT.md
+!DownStream_Classify/results_balanced_600_gpu/summary.csv
+!DownStream_Classify/results_balanced_600_gpu/summary.json
+!DownStream_Classify/results_balanced_600_gpu/runs.csv
+!DownStream_Classify/results_balanced_600_gpu/paired_comparisons.csv
+!DownStream_Classify/results_balanced_600_gpu/balanced_augmentation_curve.png
+
+DownStream_Classify/results_ood_initial_screen_gpu/*
+!DownStream_Classify/results_ood_initial_screen_gpu/EXPERIMENT_REPORT.md
+!DownStream_Classify/results_ood_initial_screen_gpu/summary.csv
+!DownStream_Classify/results_ood_initial_screen_gpu/summary.json
+!DownStream_Classify/results_ood_initial_screen_gpu/runs.csv
+!DownStream_Classify/results_ood_initial_screen_gpu/paired_comparisons.csv
+!DownStream_Classify/results_ood_initial_screen_gpu/ood_detection_rate.png
