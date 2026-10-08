@@ -1,0 +1,22 @@
+{
+  "gan_seed": 369,
+  "classifier_seeds": [
+    369,
+    370,
+    371
+  ],
+  "generated_counts": [
+    300,
+    900
+  ],
+  "epochs": 50,
+  "real_positive": 600,
+  "threshold": 0.5,
+  "ood_positive_count": 153,
+  "checkpoints": {
+    "raw": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\voyage_split_full\\runs\\raw_wavegan\\seed_369\\checkpoints\\wavegan_epoch_0200.pt",
+    "joint": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\voyage_split_full\\runs\\joint_best\\seed_369\\checkpoints\\wavegan_epoch_0200.pt",
+    "sorted": "D:\\Project_Github\\DCGAN-PyTorch\\plus_Focal_Loss\\runs\\sorted_crest\\seed_369\\checkpoints\\wavegan_epoch_0200.pt"
+  },
+  "note": "OOD used for diagnosis only; no threshold fitting. Three classifier seeds and one GAN seed are exploratory evidence."
+}

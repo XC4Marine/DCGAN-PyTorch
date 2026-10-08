@@ -1,0 +1,49 @@
+{
+  "method": "joint_wavegan",
+  "generated_count": 300,
+  "seed": 370,
+  "epochs": 50,
+  "device": "cuda",
+  "train_real_positive": 600,
+  "train_generated_positive": 300,
+  "train_negative": 900,
+  "balanced_samples_per_epoch": 1800,
+  "test_positive": 155,
+  "test_negative": 203,
+  "preprocessing": {
+    "other_species_resampled": false,
+    "other_sources_sample_rate_hz": 576000,
+    "highpass_cutoff_hz": 20000,
+    "highpass_order": 8,
+    "highpass_zero_phase": true,
+    "waveform_length": 128,
+    "normalization": "instance_peak"
+  },
+  "metrics": {
+    "macro_f1": 0.9465768164432191,
+    "balanced_accuracy": 0.9532019704433498,
+    "auroc": 0.9788971873510249,
+    "auprc": 0.9275584148994716,
+    "positive_precision": 0.8908045977011494,
+    "positive_recall": 1.0,
+    "positive_f1": 0.9422492401215805,
+    "specificity": 0.9064039408866995,
+    "background_specificity": 0.9148936170212766,
+    "other_species_specificity": 0.8,
+    "tp": 155,
+    "tn": 184,
+    "fp": 19,
+    "fn": 0
+  },
+  "ood_detection": {
+    "positive_count": 153,
+    "detected_count": 108,
+    "missed_count": 45,
+    "detection_rate": 0.7058823529411765,
+    "miss_rate": 0.2941176470588235,
+    "mean_positive_probability": 0.6124105911133371
+  },
+  "checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\plus_Focal_Loss\\domain_diagnosis\\runs\\sorted\\g300\\seed_370\\classifier.pt",
+  "generator_method": "sorted",
+  "generator_checkpoint": "D:\\Project_Github\\DCGAN-PyTorch\\plus_Focal_Loss\\runs\\sorted_crest\\seed_369\\checkpoints\\wavegan_epoch_0200.pt"
+}
