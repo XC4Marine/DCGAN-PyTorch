@@ -1,0 +1,7 @@
+﻿{
+    "gpu":  "NVIDIA GeForce RTX 4060",
+    "process_id":  30512,
+    "started_utc":  "2026-10-09T14:58:05.0442660Z",
+    "torch":  "2.7.0+cu126",
+    "python":  "D:\\Python_env\\wavegan_torch\\python.exe"
+}

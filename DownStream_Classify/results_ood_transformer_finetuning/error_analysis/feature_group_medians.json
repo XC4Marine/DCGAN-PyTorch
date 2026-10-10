@@ -1,0 +1,62 @@
+{
+  "real_train": {
+    "peak_amplitude": 1.0,
+    "peak_to_peak": 1.6566381454467773,
+    "rms": 0.22296300530433655,
+    "crest_factor": 4.485060214996338,
+    "peak_location_samples": 20.0,
+    "dominant_frequency_hz": 40500.0,
+    "spectral_centroid_hz": 51664.25411115651,
+    "spectral_bandwidth_hz": 15715.376564583083
+  },
+  "real_test": {
+    "peak_amplitude": 1.0,
+    "peak_to_peak": 1.7031981945037842,
+    "rms": 0.224346324801445,
+    "crest_factor": 4.457394123077393,
+    "peak_location_samples": 20.0,
+    "dominant_frequency_hz": 45000.0,
+    "spectral_centroid_hz": 51260.62977958592,
+    "spectral_bandwidth_hz": 15589.166826605437
+  },
+  "missed7": {
+    "peak_amplitude": 1.0,
+    "peak_to_peak": 1.8506083488464355,
+    "rms": 0.33473965525627136,
+    "crest_factor": 2.987396240234375,
+    "peak_location_samples": 20.0,
+    "dominant_frequency_hz": 31500.0,
+    "spectral_centroid_hz": 40972.3492752403,
+    "spectral_bandwidth_hz": 15044.116398067772
+  },
+  "correct59": {
+    "peak_amplitude": 1.0,
+    "peak_to_peak": 1.6824654340744019,
+    "rms": 0.2181791067123413,
+    "crest_factor": 4.583390235900879,
+    "peak_location_samples": 20.0,
+    "dominant_frequency_hz": 49500.0,
+    "spectral_centroid_hz": 54074.01027286416,
+    "spectral_bandwidth_hz": 15589.166826605437
+  },
+  "raw_wavegan": {
+    "peak_amplitude": 1.0,
+    "peak_to_peak": 1.7693182229995728,
+    "rms": 0.23062872886657715,
+    "crest_factor": 4.335996627807617,
+    "peak_location_samples": 20.0,
+    "dominant_frequency_hz": 67500.0,
+    "spectral_centroid_hz": 62563.01362207031,
+    "spectral_bandwidth_hz": 15742.371285808662
+  },
+  "joint_wavegan": {
+    "peak_amplitude": 1.0,
+    "peak_to_peak": 1.735082983970642,
+    "rms": 0.22934406995773315,
+    "crest_factor": 4.36026668548584,
+    "peak_location_samples": 20.0,
+    "dominant_frequency_hz": 67500.0,
+    "spectral_centroid_hz": 59020.27001796641,
+    "spectral_bandwidth_hz": 17236.582138577658
+  }
+}

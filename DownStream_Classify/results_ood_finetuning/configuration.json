@@ -1,0 +1,50 @@
+{
+  "data_dir": "D:\\Project_Github\\雷洲湾标注\\data\\初筛",
+  "output_dir": "D:\\Project_Github\\DCGAN-PyTorch\\DownStream_Classify\\results_ood_finetuning",
+  "device": "cuda",
+  "finetune_epochs": 200,
+  "classifier_epochs": 50,
+  "split_seed": 20260929,
+  "finetune_seed": 374,
+  "generation_seed": 369,
+  "classifier_seeds": [
+    369,
+    370,
+    371,
+    372,
+    373
+  ],
+  "checkpoints": {
+    "raw_wavegan": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\voyage_split_full\\runs\\raw_wavegan\\seed_374\\checkpoints\\wavegan_epoch_0200.pt",
+    "joint_wavegan": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\voyage_split_full\\runs\\joint_best\\seed_374\\checkpoints\\wavegan_epoch_0200.pt"
+  },
+  "ratios": [
+    0.1,
+    0.3,
+    0.5,
+    0.7,
+    0.8,
+    1.0
+  ],
+  "generated_counts": [
+    8,
+    23,
+    38,
+    53,
+    61,
+    76
+  ],
+  "sample_rate": 180000,
+  "waveform_length": 40,
+  "generated_pool_count": 100,
+  "generator_learning_rate_scale": 0.2,
+  "discriminator_learning_rate_scale": 1.0,
+  "trainable_generator_layers": [
+    "upconv_1",
+    "downsample"
+  ],
+  "phase_shuffle_radius": 1,
+  "psd_n_fft": 40,
+  "psd_hop_length": 10,
+  "classifier_highpass_hz": 20000
+}

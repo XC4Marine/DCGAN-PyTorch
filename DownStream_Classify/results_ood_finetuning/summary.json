@@ -1,0 +1,162 @@
+{
+  "distribution_metrics": {
+    "raw_wavegan": {
+      "real_count": 77,
+      "generated_count": 100,
+      "feature_wasserstein_distance": {
+        "peak_amplitude": 0.4781321172416211,
+        "peak_to_peak": 0.7664480986958975,
+        "rms": 0.1197288222204555,
+        "crest_factor": 0.1635348037311009,
+        "peak_location_samples": 1.270779220779221,
+        "dominant_frequency_hz": 18227.33766233766,
+        "spectral_centroid_hz": 13889.642078143253,
+        "spectral_bandwidth_hz": 2618.8951601833123
+      },
+      "mean_psd_absolute_error": 0.04606658220291138,
+      "mean_log10_psd_absolute_error": 0.6864323616027832,
+      "shape_similarity": {
+        "metric": "nearest_neighbor_l2_over_40_samples; lower_is_closer",
+        "normalization": "per_waveform_peak; no_alignment_or_sign_flip",
+        "generated_to_test_mean": 1.1865142583847046,
+        "generated_to_test_std": 0.412368506193161,
+        "test_to_generated_mean": 1.0526719093322754,
+        "test_to_test_excluding_self_mean": 0.6331884264945984
+      }
+    },
+    "joint_wavegan": {
+      "real_count": 77,
+      "generated_count": 100,
+      "feature_wasserstein_distance": {
+        "peak_amplitude": 0.4543829233944416,
+        "peak_to_peak": 0.7329476958281035,
+        "rms": 0.11407953373749147,
+        "crest_factor": 0.16444153835247088,
+        "peak_location_samples": 1.0666233766233766,
+        "dominant_frequency_hz": 16922.33766233766,
+        "spectral_centroid_hz": 8149.218885581636,
+        "spectral_bandwidth_hz": 3861.2089021638003
+      },
+      "mean_psd_absolute_error": 0.04481152445077896,
+      "mean_log10_psd_absolute_error": 0.545737624168396,
+      "shape_similarity": {
+        "metric": "nearest_neighbor_l2_over_40_samples; lower_is_closer",
+        "normalization": "per_waveform_peak; no_alignment_or_sign_flip",
+        "generated_to_test_mean": 1.2374036312103271,
+        "generated_to_test_std": 0.32131412625312805,
+        "test_to_generated_mean": 1.2637170553207397,
+        "test_to_test_excluding_self_mean": 0.6331884264945984
+      }
+    }
+  },
+  "classification": [
+    {
+      "method": "raw_wavegan",
+      "ratio": 0.1,
+      "generated_count": 8,
+      "runs": 5,
+      "detection_rate_mean": 0.6,
+      "detection_rate_std": 0.5477225575051662,
+      "mean_positive_probability": 0.5018765985965729
+    },
+    {
+      "method": "raw_wavegan",
+      "ratio": 0.3,
+      "generated_count": 23,
+      "runs": 5,
+      "detection_rate_mean": 0.8,
+      "detection_rate_std": 0.4472135954999579,
+      "mean_positive_probability": 0.5056497871875762
+    },
+    {
+      "method": "raw_wavegan",
+      "ratio": 0.5,
+      "generated_count": 38,
+      "runs": 5,
+      "detection_rate_mean": 0.6,
+      "detection_rate_std": 0.5477225575051662,
+      "mean_positive_probability": 0.5076320230960846
+    },
+    {
+      "method": "raw_wavegan",
+      "ratio": 0.7,
+      "generated_count": 53,
+      "runs": 5,
+      "detection_rate_mean": 0.8,
+      "detection_rate_std": 0.44721359549995804,
+      "mean_positive_probability": 0.5054448664188385
+    },
+    {
+      "method": "raw_wavegan",
+      "ratio": 0.8,
+      "generated_count": 61,
+      "runs": 5,
+      "detection_rate_mean": 0.6,
+      "detection_rate_std": 0.5477225575051662,
+      "mean_positive_probability": 0.497161740064621
+    },
+    {
+      "method": "raw_wavegan",
+      "ratio": 1.0,
+      "generated_count": 76,
+      "runs": 5,
+      "detection_rate_mean": 0.8,
+      "detection_rate_std": 0.44721359549995804,
+      "mean_positive_probability": 0.5056026995182037
+    },
+    {
+      "method": "joint_wavegan",
+      "ratio": 0.1,
+      "generated_count": 8,
+      "runs": 5,
+      "detection_rate_mean": 0.5974025974025974,
+      "detection_rate_std": 0.5453772363271705,
+      "mean_positive_probability": 0.501970785856247
+    },
+    {
+      "method": "joint_wavegan",
+      "ratio": 0.3,
+      "generated_count": 23,
+      "runs": 5,
+      "detection_rate_mean": 0.2,
+      "detection_rate_std": 0.447213595499958,
+      "mean_positive_probability": 0.49715439677238465
+    },
+    {
+      "method": "joint_wavegan",
+      "ratio": 0.5,
+      "generated_count": 38,
+      "runs": 5,
+      "detection_rate_mean": 0.6,
+      "detection_rate_std": 0.5477225575051662,
+      "mean_positive_probability": 0.5046618819236756
+    },
+    {
+      "method": "joint_wavegan",
+      "ratio": 0.7,
+      "generated_count": 53,
+      "runs": 5,
+      "detection_rate_mean": 0.8,
+      "detection_rate_std": 0.44721359549995804,
+      "mean_positive_probability": 0.50677992105484
+    },
+    {
+      "method": "joint_wavegan",
+      "ratio": 0.8,
+      "generated_count": 61,
+      "runs": 5,
+      "detection_rate_mean": 0.4,
+      "detection_rate_std": 0.5477225575051662,
+      "mean_positive_probability": 0.4982510507106781
+    },
+    {
+      "method": "joint_wavegan",
+      "ratio": 1.0,
+      "generated_count": 76,
+      "runs": 5,
+      "detection_rate_mean": 0.8,
+      "detection_rate_std": 0.44721359549995804,
+      "mean_positive_probability": 0.5090425491333008
+    }
+  ]
+}

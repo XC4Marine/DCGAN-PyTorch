@@ -144,12 +144,12 @@ class SinusoidalPositionEncoding(nn.Module):
 
 
 class ClassicTransformerClassifier(nn.Module):
-  def __init__(self):
+  def __init__(self, waveform_length=WAVEFORM_LENGTH):
     super().__init__()
     d_model = 128
     self.input_projection = nn.Linear(1, d_model)
     self.class_token = nn.Parameter(torch.zeros(1, 1, d_model))
-    self.position = SinusoidalPositionEncoding(d_model, WAVEFORM_LENGTH + 1)
+    self.position = SinusoidalPositionEncoding(d_model, waveform_length + 1)
     layer = nn.TransformerEncoderLayer(
         d_model=d_model,
         nhead=4,

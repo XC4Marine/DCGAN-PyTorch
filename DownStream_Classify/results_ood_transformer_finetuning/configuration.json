@@ -1,0 +1,25 @@
+{
+  "source_dir": "D:\\Project_Github\\DCGAN-PyTorch\\DownStream_Classify\\results_ood_finetuning",
+  "output_dir": "D:\\Project_Github\\DCGAN-PyTorch\\DownStream_Classify\\results_ood_transformer_finetuning",
+  "device": "cuda",
+  "finetune_source_transformer": true,
+  "source_checkpoint_dir": "D:\\Project_Github\\DCGAN-PyTorch\\DownStream_Classify\\results_ood_initial_screen_gpu\\checkpoints\\baseline\\g0",
+  "python": "D:\\Python_env\\wavegan_torch\\python.exe",
+  "torch": "2.7.0+cu126",
+  "training_mode": "source_finetuning",
+  "base_learning_rate": 2e-05,
+  "trainable_layers": "all",
+  "from_scratch_summary": "D:\\Project_Github\\DCGAN-PyTorch\\DownStream_Classify\\results_ood_baseline_negative_test\\summary.json",
+  "classifier_epochs": 50,
+  "classifier_seeds": [
+    369,
+    370,
+    371,
+    372,
+    373
+  ],
+  "sample_rate": 180000,
+  "waveform_length": 40,
+  "threshold": 0.5,
+  "negative_test_source": "original_test_negative_203; not_new_ood_negatives"
+}
