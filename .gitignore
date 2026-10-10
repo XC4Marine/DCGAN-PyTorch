@@ -41,3 +41,12 @@ DownStream_Classify/results_ood_initial_screen_gpu/*
 !DownStream_Classify/results_ood_initial_screen_gpu/runs.csv
 !DownStream_Classify/results_ood_initial_screen_gpu/paired_comparisons.csv
 !DownStream_Classify/results_ood_initial_screen_gpu/ood_detection_rate.png
+
+# Local OOD experiment outputs.
+DownStream_Classify/results_ood_finetuning/
+DownStream_Classify/results_ood_finetuning_interrupted_*/
+DownStream_Classify/results_ood_baseline_negative_test/
+DownStream_Classify/results_ood_transformer_finetuning/
+
+# Dual-critic checkpoints, logs, and generated evaluation outputs.
+dual_critic/runs/
