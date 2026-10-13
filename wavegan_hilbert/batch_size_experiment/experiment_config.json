@@ -1,0 +1,18 @@
+{
+  "data_dir": "D:\\Project_Github\\DCGAN-PyTorch\\data\\wav",
+  "split_dir": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_PSD_crest\\voyage_split_full\\split",
+  "output_dir": "D:\\Project_Github\\DCGAN-PyTorch\\wavegan_hilbert\\batch_size_experiment",
+  "batch_sizes": [
+    16,
+    32,
+    64,
+    128
+  ],
+  "epochs": 200,
+  "seed": 369,
+  "hilbert_loss_weight": 1.0,
+  "checkpoint_every": 50,
+  "evaluation_batch_size": 256,
+  "evaluation_seed": 369,
+  "device": "cuda"
+}

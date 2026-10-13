@@ -10,6 +10,7 @@ import numpy as np
 from scipy.io import wavfile
 import torch
 from torch import autograd
+from torch.nn import functional
 from torch.optim import Adam
 from torch.utils.data import DataLoader, Dataset
 
@@ -65,6 +66,29 @@ def gradient_penalty(discriminator, real_waveforms, fake_waveforms):
       create_graph=True, retain_graph=True, only_inputs=True)[0]
   slopes = gradients.reshape(batch_size, -1).norm(2, dim=1)
   return ((slopes - 1.0) ** 2).mean()
+
+
+def paired_augment(real_waveforms, fake_waveforms, smooth_eq=False):
+  batch_size, _, length = real_waveforms.shape
+  scales = torch.empty(batch_size, 1, 1, device=real_waveforms.device).uniform_(0.9, 1.1)
+  shifts = torch.randint(-3, 4, (batch_size,), device=real_waveforms.device)
+  positions = torch.arange(length, device=real_waveforms.device)[None, :] - shifts[:, None]
+  valid = (positions >= 0) & (positions < length)
+  if smooth_eq:
+    anchor_gains_db = torch.empty(batch_size, 1, 5, device=real_waveforms.device).uniform_(-1.5, 1.5)
+    gain_db = functional.interpolate(anchor_gains_db, size=length // 2 + 1, mode='linear', align_corners=True)
+    frequency_gain = torch.pow(10.0, gain_db / 20.0)
+
+  def transform(waveforms):
+    indices = positions.clamp(0, length - 1)[:, None, :]
+    augmented = waveforms.gather(2, indices) * valid[:, None, :] * scales
+    if not smooth_eq:
+      return augmented
+    target_rms = augmented.square().mean(dim=2, keepdim=True).sqrt()
+    equalized = torch.fft.irfft(torch.fft.rfft(augmented, dim=2) * frequency_gain, n=length, dim=2)
+    return equalized * target_rms / (equalized.square().mean(dim=2, keepdim=True).sqrt() + 1e-12)
+
+  return transform(real_waveforms), transform(fake_waveforms), transform
 
 
 def save_checkpoint(path, epoch, generator, discriminator, generator_optimizer, discriminator_optimizer, args):
@@ -150,6 +174,8 @@ def main():
   parser.add_argument('--psd-loss-weight', type=float, required=True)
   parser.add_argument('--psd-n-fft', type=int, default=128)
   parser.add_argument('--psd-hop-length', type=int, default=32)
+  parser.add_argument('--paired-augment', action='store_true')
+  parser.add_argument('--paired-smooth-eq', action='store_true')
   parser.add_argument('--seed', type=int, default=369)
   parser.add_argument('--device', choices=['auto', 'cuda', 'cpu'], default='auto')
   args = parser.parse_args()
@@ -189,9 +215,16 @@ def main():
       real_waveforms = real_waveforms.to(device, non_blocking=True)
       batch_size = real_waveforms.size(0)
       fake_waveforms = generator(torch.randn(batch_size, args.latent_dim, device=device)).detach()
+      if args.paired_augment:
+        real_for_discriminator, fake_for_discriminator, augment = paired_augment(
+            real_waveforms, fake_waveforms, args.paired_smooth_eq)
+      else:
+        real_for_discriminator, fake_for_discriminator = real_waveforms, fake_waveforms
       discriminator_optimizer.zero_grad()
-      discriminator_loss = (discriminator(fake_waveforms).mean() - discriminator(real_waveforms).mean() +
-                            args.gradient_penalty * gradient_penalty(discriminator, real_waveforms, fake_waveforms))
+      discriminator_loss = (discriminator(fake_for_discriminator).mean() -
+                            discriminator(real_for_discriminator).mean() +
+                            args.gradient_penalty * gradient_penalty(
+                                discriminator, real_for_discriminator, fake_for_discriminator))
       discriminator_loss.backward()
       discriminator_optimizer.step()
       discriminator_losses.append(discriminator_loss.item())
@@ -199,7 +232,8 @@ def main():
       if global_step % args.n_critic == 0:
         generator_optimizer.zero_grad()
         generated_waveforms = generator(torch.randn(batch_size, args.latent_dim, device=device))
-        adversarial_loss = -discriminator(generated_waveforms).mean()
+        generated_for_discriminator = augment(generated_waveforms) if args.paired_augment else generated_waveforms
+        adversarial_loss = -discriminator(generated_for_discriminator).mean()
         crest_loss = crest_loss_function(real_waveforms, generated_waveforms)
         psd_loss = psd_loss_function(real_waveforms, generated_waveforms)
         generator_loss = (adversarial_loss + args.crest_loss_weight * crest_loss +

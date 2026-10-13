@@ -17,6 +17,7 @@ CONFIGURATIONS = (
     ('crest_only_peak', 'Crest-only', 1.0, 0.0),
     ('psd_only_log_psd', 'PSD-only', 0.0, 0.4),
     ('joint_best', 'Joint', 0.6, 0.15),
+    ('joint_paired_augment', 'Joint + paired augmentation', 0.6, 0.15),
 )
 SEEDS = tuple(range(369, 384))
 METRICS = {
@@ -160,7 +161,7 @@ def main():
         item['nn_l2_mean']['real_to_generated_mean_l2'],
         item['nn_l2_std']['real_to_generated_mean_l2']))
   lines.extend(['', '## 每个随机种子的测试结果', '',
-                '以下指标均在同一独立测试集上计算；评分相对五个原始 WaveGAN 种子的指标均值，越低越好。'])
+                '以下指标均在同一独立测试集上计算；评分相对十五个原始 WaveGAN 种子的指标均值，越低越好。'])
   metric_names = tuple(METRICS)
   for key, label, crest_weight, psd_weight in CONFIGURATIONS:
     item = summary['configurations'][key]

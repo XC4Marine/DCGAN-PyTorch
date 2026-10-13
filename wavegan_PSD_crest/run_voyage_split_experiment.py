@@ -10,10 +10,11 @@ import sys
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 CONFIGURATIONS = (
-    ('raw_wavegan', 0.0, 0.0),
-    ('crest_only_peak', 1.0, 0.0),
-    ('psd_only_log_psd', 0.0, 0.4),
-    ('joint_best', 0.6, 0.15),
+    ('raw_wavegan', 0.0, 0.0, False),
+    ('crest_only_peak', 1.0, 0.0, False),
+    ('psd_only_log_psd', 0.0, 0.4, False),
+    ('joint_best', 0.6, 0.15, False),
+    ('joint_paired_augment', 0.6, 0.15, True),
 )
 SEEDS = tuple(range(369, 384))
 
@@ -53,7 +54,7 @@ def main():
   test_list = args.split_dir / 'test_files.txt'
   total = len(CONFIGURATIONS) * len(SEEDS)
   completed = 0
-  for name, crest_weight, psd_weight in CONFIGURATIONS:
+  for name, crest_weight, psd_weight, paired_augment in CONFIGURATIONS:
     for seed in SEEDS:
       run_dir = args.output_dir / name / 'seed_{}'.format(seed)
       checkpoint = run_dir / 'checkpoints' / 'wavegan_epoch_{:04d}.pt'.format(args.epochs)
@@ -71,6 +72,8 @@ def main():
           '--crest-loss-weight', '{:g}'.format(crest_weight), '--psd-loss-weight', '{:g}'.format(psd_weight),
           '--seed', str(seed),
       ]
+      if paired_augment:
+        train_command.append('--paired-augment')
       run_logged(train_command, run_dir / 'training.log')
       evaluation_command = [
           sys.executable, str(SCRIPT_DIR / 'evaluate_wavegan_torch.py'),
