@@ -1,9 +1,12 @@
 """Train a 128-sample WaveGAN with a weighted crest-factor loss."""
 
 import argparse
+import csv
 import json
+import math
 from pathlib import Path
 import random
+import re
 
 import numpy as np
 from scipy.io import wavfile
@@ -17,6 +20,28 @@ from pytorch_wavegan import WaveGANDiscriminator, WaveGANGenerator, weights_init
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PULSE_TRAIN_PATTERN = re.compile(r'^PulseTrain_(\d+)_Pulse_\d+$')
+
+
+def load_train_ids(metadata_file, ori_file_num):
+  """Return pulse-train IDs associated with one original voyage/file."""
+  train_ids = set()
+  with Path(metadata_file).open(encoding='utf-8-sig', newline='') as handle:
+    reader = csv.DictReader(handle)
+    required_columns = {'Train_num(No.)', 'Ori_file_num(No.)'}
+    missing_columns = required_columns.difference(reader.fieldnames or ())
+    if missing_columns:
+      raise ValueError(
+          '{} is missing columns: {}.'.format(
+              metadata_file, ', '.join(sorted(missing_columns))))
+    for row in reader:
+      if int(row['Ori_file_num(No.)']) == ori_file_num:
+        train_ids.add(int(row['Train_num(No.)']))
+  if not train_ids:
+    raise ValueError(
+        'No pulse trains found for Ori_file_num={} in {}.'.format(
+            ori_file_num, metadata_file))
+  return train_ids
 
 
 def decode_waveform(path, expected_sample_rate):
@@ -47,10 +72,19 @@ def decode_waveform(path, expected_sample_rate):
 class ClickWaveformDataset(Dataset):
   """One normalized and zero-padded 128-point example per WAV file."""
 
-  def __init__(self, data_dir, sample_rate):
-    self.paths = sorted(path for path in Path(data_dir).rglob('*') if path.suffix.lower() == '.wav')
+  def __init__(self, data_dir, sample_rate, train_ids=None):
+    paths = (path for path in Path(data_dir).rglob('*') if path.suffix.lower() == '.wav')
+    if train_ids is not None:
+      selected_paths = []
+      for path in paths:
+        match = PULSE_TRAIN_PATTERN.match(path.stem)
+        if match and int(match.group(1)) in train_ids:
+          selected_paths.append(path)
+      paths = selected_paths
+    self.paths = sorted(paths)
     if not self.paths:
-      raise FileNotFoundError('No WAV files found under {}.'.format(data_dir))
+      selection = '' if train_ids is None else ' for the selected pulse trains'
+      raise FileNotFoundError('No WAV files found{} under {}.'.format(selection, data_dir))
     self.sample_rate = sample_rate
 
   def __len__(self):
@@ -88,25 +122,32 @@ def save_preview(generator, fixed_noise, output_dir, epoch, sample_rate):
   wavfile.write(str(output_dir / 'preview_epoch_{:04d}.wav'.format(epoch)), sample_rate, encoded)
 
 
-def save_checkpoint(path, epoch, generator, discriminator, generator_optimizer, discriminator_optimizer, args):
+def save_checkpoint(path, epoch, global_step, generator, discriminator, generator_optimizer,
+                    discriminator_optimizer, args, best_critic_loss,
+                    epochs_without_improvement):
   torch.save({
       'epoch': epoch,
+      'global_step': global_step,
       'generator': generator.state_dict(),
       'discriminator': discriminator.state_dict(),
       'generator_optimizer': generator_optimizer.state_dict(),
       'discriminator_optimizer': discriminator_optimizer.state_dict(),
+      'best_critic_loss': best_critic_loss,
+      'epochs_without_improvement': epochs_without_improvement,
       'args': vars(args),
   }, str(path))
 
 
 def write_epoch_log(log_file, epoch, crest_loss_weight, discriminator_losses,
-                    adversarial_losses, crest_losses, total_generator_losses):
+                    adversarial_losses, crest_losses, total_generator_losses,
+                    global_step):
   """Append one machine-readable loss summary for an epoch."""
   def mean_or_none(values):
     return None if not values else float(np.mean(values))
 
   record = {
       'epoch': epoch,
+      'global_step': global_step,
       'crest_loss_weight': crest_loss_weight,
       'mean_discriminator_loss': mean_or_none(discriminator_losses),
       'mean_generator_adversarial_loss': mean_or_none(adversarial_losses),
@@ -121,8 +162,13 @@ def write_epoch_log(log_file, epoch, crest_loss_weight, discriminator_losses,
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument('--data-dir', type=Path, default=PROJECT_ROOT / 'data' / 'wav')
+  parser.add_argument('--metadata-file', type=Path, default=PROJECT_ROOT / 'data' / 'ClickTrains.csv')
+  parser.add_argument('--ori-file-num', type=int,
+                      help='Restrict WAVs to pulse trains whose Ori_file_num matches this value.')
   parser.add_argument('--output-dir', type=Path, default=Path('train_crest_torch'))
   parser.add_argument('--epochs', type=int, default=200)
+  parser.add_argument('--max-update-steps', type=int,
+                      help='Maximum number of critic optimizer updates; overrides --epochs as the limit.')
   parser.add_argument('--batch-size', type=int, default=64)
   parser.add_argument('--latent-dim', type=int, default=100)
   parser.add_argument('--model-dim', type=int, default=64)
@@ -138,16 +184,29 @@ def main():
   parser.add_argument('--device', choices=['auto', 'cuda', 'cpu'], default='auto')
   parser.add_argument('--resume', type=Path)
   parser.add_argument('--checkpoint-every', type=int, default=1)
+  parser.add_argument('--early-stopping-patience-fraction', type=float,
+                      help='Stop after this fraction of planned epochs without critic-loss improvement.')
+  parser.add_argument('--early-stopping-min-delta', type=float, default=0.0,
+                      help='Minimum decrease in mean epoch critic loss that counts as improvement.')
   parser.add_argument('--log-file', type=Path, required=True,
                       help='JSONL file receiving configuration and one loss summary per epoch.')
   args = parser.parse_args()
 
   if args.epochs < 1:
     raise ValueError('--epochs must be positive.')
+  if args.max_update_steps is not None and args.max_update_steps < 1:
+    raise ValueError('--max-update-steps must be positive.')
   if args.crest_loss_weight < 0:
     raise ValueError('--crest-loss-weight must be non-negative.')
   if args.n_critic < 1:
     raise ValueError('--n-critic must be positive.')
+  if args.checkpoint_every < 1:
+    raise ValueError('--checkpoint-every must be positive.')
+  if (args.early_stopping_patience_fraction is not None
+      and not 0.0 < args.early_stopping_patience_fraction <= 1.0):
+    raise ValueError('--early-stopping-patience-fraction must be in (0, 1].')
+  if args.early_stopping_min_delta < 0:
+    raise ValueError('--early-stopping-min-delta must be non-negative.')
 
   random.seed(args.seed)
   np.random.seed(args.seed)
@@ -167,13 +226,32 @@ def main():
   else:
     print('Using CPU.')
 
-  dataset = ClickWaveformDataset(args.data_dir, args.sample_rate)
+  train_ids = None
+  if args.ori_file_num is not None:
+    train_ids = load_train_ids(args.metadata_file, args.ori_file_num)
+  dataset = ClickWaveformDataset(args.data_dir, args.sample_rate, train_ids=train_ids)
   loader = DataLoader(
       dataset, batch_size=args.batch_size, shuffle=True, drop_last=True,
       num_workers=args.num_workers, pin_memory=device.type == 'cuda')
   if len(loader) == 0:
     raise ValueError('Batch size {} exceeds dataset size {}.'.format(args.batch_size, len(dataset)))
-  print('Loaded {} click waveforms from {}.'.format(len(dataset), args.data_dir.resolve()))
+  selection_label = (
+      ' for Ori_file_num={}'.format(args.ori_file_num)
+      if args.ori_file_num is not None else '')
+  print('Loaded {} click waveforms{} from {}.'.format(
+      len(dataset), selection_label, args.data_dir.resolve()))
+
+  planned_epochs = args.epochs
+  if args.max_update_steps is not None:
+    planned_epochs = int(math.ceil(args.max_update_steps / len(loader)))
+  early_stopping_patience = None
+  if args.early_stopping_patience_fraction is not None:
+    early_stopping_patience = max(
+        1, int(math.ceil(planned_epochs * args.early_stopping_patience_fraction)))
+  print('Training plan: {} epoch(s), {} batch(es) per epoch, max update steps={}, '
+        'early-stopping patience={} epoch(s), min_delta={}.'.format(
+            planned_epochs, len(loader), args.max_update_steps,
+            early_stopping_patience, args.early_stopping_min_delta))
 
   generator = WaveGANGenerator(args.latent_dim, dim=args.model_dim, kernel_len=args.kernel_len).to(device)
   discriminator = WaveGANDiscriminator(dim=args.model_dim, kernel_len=args.kernel_len).to(device)
@@ -183,6 +261,9 @@ def main():
   discriminator_optimizer = Adam(discriminator.parameters(), lr=args.learning_rate, betas=(0.5, 0.9))
   crest_criterion = CrestFactorLoss().to(device)
   start_epoch = 1
+  global_step = 0
+  best_critic_loss = float('inf')
+  epochs_without_improvement = 0
 
   if args.resume:
     checkpoint = torch.load(str(args.resume), map_location=device, weights_only=False)
@@ -191,7 +272,11 @@ def main():
     generator_optimizer.load_state_dict(checkpoint['generator_optimizer'])
     discriminator_optimizer.load_state_dict(checkpoint['discriminator_optimizer'])
     start_epoch = checkpoint['epoch'] + 1
-    print('Resumed from {} at epoch {}.'.format(args.resume, start_epoch))
+    global_step = checkpoint.get('global_step', (start_epoch - 1) * len(loader))
+    best_critic_loss = checkpoint.get('best_critic_loss', float('inf'))
+    epochs_without_improvement = checkpoint.get('epochs_without_improvement', 0)
+    print('Resumed from {} at epoch {}, update step {}.'.format(
+        args.resume, start_epoch, global_step))
 
   args.output_dir.mkdir(parents=True, exist_ok=True)
   args.log_file.parent.mkdir(parents=True, exist_ok=True)
@@ -199,14 +284,18 @@ def main():
     handle.write(json.dumps({
         'type': 'configuration',
         'crest_loss_weight': args.crest_loss_weight,
-        'epochs': args.epochs,
+        'epochs': planned_epochs,
+        'max_update_steps': args.max_update_steps,
         'batch_size': args.batch_size,
+        'ori_file_num': args.ori_file_num,
+        'dataset_size': len(dataset),
+        'early_stopping_patience': early_stopping_patience,
+        'early_stopping_min_delta': args.early_stopping_min_delta,
         'seed': args.seed,
     }, ensure_ascii=False) + '\n')
 
   fixed_noise = torch.randn(16, args.latent_dim, device=device)
-  global_step = 0
-  for epoch in range(start_epoch, args.epochs + 1):
+  for epoch in range(start_epoch, planned_epochs + 1):
     generator.train()
     discriminator.train()
     generator_loss = None
@@ -216,6 +305,8 @@ def main():
     epoch_crest_losses = []
     epoch_generator_total_losses = []
     for batch_index, real_waveforms in enumerate(loader, 1):
+      if args.max_update_steps is not None and global_step >= args.max_update_steps:
+        break
       real_waveforms = real_waveforms.to(device, non_blocking=True)
       batch_size = real_waveforms.size(0)
 
@@ -246,19 +337,47 @@ def main():
         crest_value = float('nan') if batch_crest_loss is None else batch_crest_loss.item()
         print(
             'Epoch {}/{} | batch {}/{} | D={:.5f} | G={:.5f} | Crest={:.5f}'.format(
-                epoch, args.epochs, batch_index, len(loader), discriminator_loss.item(),
+                epoch, planned_epochs, batch_index, len(loader), discriminator_loss.item(),
                 generator_value, crest_value),
             flush=True)
+        if args.max_update_steps is not None:
+          progress = min(1.0, global_step / args.max_update_steps)
+          width = 30
+          filled = round(width * progress)
+          print('Overall progress: [{}{}] {:6.2f}% | update steps {}/{}'.format(
+              '#' * filled, '-' * (width - filled), 100.0 * progress,
+              global_step, args.max_update_steps), flush=True)
 
     write_epoch_log(
         args.log_file, epoch, args.crest_loss_weight, epoch_discriminator_losses,
-        epoch_adversarial_losses, epoch_crest_losses, epoch_generator_total_losses)
+        epoch_adversarial_losses, epoch_crest_losses, epoch_generator_total_losses,
+        global_step)
+
+    mean_critic_loss = float(np.mean(epoch_discriminator_losses))
+    if mean_critic_loss < best_critic_loss - args.early_stopping_min_delta:
+      best_critic_loss = mean_critic_loss
+      epochs_without_improvement = 0
+    else:
+      epochs_without_improvement += 1
 
     if epoch % args.checkpoint_every == 0:
       save_checkpoint(
-          args.output_dir / 'wavegan_epoch_{:04d}.pt'.format(epoch), epoch,
-          generator, discriminator, generator_optimizer, discriminator_optimizer, args)
+          args.output_dir / 'wavegan_epoch_{:04d}.pt'.format(epoch), epoch, global_step,
+          generator, discriminator, generator_optimizer, discriminator_optimizer, args,
+          best_critic_loss, epochs_without_improvement)
       save_preview(generator, fixed_noise, args.output_dir, epoch, args.sample_rate)
+
+    if (early_stopping_patience is not None
+        and epochs_without_improvement >= early_stopping_patience):
+      print('Early stopping at epoch {} and update step {}: mean critic loss did not '
+            'improve by at least {} for {} epoch(s).'.format(
+                epoch, global_step, args.early_stopping_min_delta,
+                early_stopping_patience), flush=True)
+      break
+    if args.max_update_steps is not None and global_step >= args.max_update_steps:
+      print('Reached max update steps ({}) at epoch {}.'.format(
+          args.max_update_steps, epoch), flush=True)
+      break
 
 
 if __name__ == '__main__':
