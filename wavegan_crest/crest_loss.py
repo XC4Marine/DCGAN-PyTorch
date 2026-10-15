@@ -40,8 +40,19 @@ class CrestFactorLoss(nn.Module):
     real_rms = torch.sqrt(torch.mean(real_audio.square(), dim=-1) + self.rms_epsilon)
     fake_rms = torch.sqrt(torch.mean(fake_audio.square(), dim=-1) + self.rms_epsilon)
 
-    peak_distance = functional.l1_loss(fake_peak, real_peak)
-    crest_distance = functional.l1_loss(
-        fake_peak / (fake_rms + self.denominator_epsilon),
-        real_peak / (real_rms + self.denominator_epsilon))
+    # 1. 先计算出具体的 Crest 比值
+    real_crest = real_peak / (real_rms + self.denominator_epsilon)
+    fake_crest = fake_peak / (fake_rms + self.denominator_epsilon)
+
+    # 2. 【核心修改】沿着 Batch 维度 (dim=0) 从小到大排序，实现 1D-Wasserstein 分布对齐
+    sorted_real_peak, _ = torch.sort(real_peak, dim=0)
+    sorted_fake_peak, _ = torch.sort(fake_peak, dim=0)
+    
+    sorted_real_crest, _ = torch.sort(real_crest, dim=0)
+    sorted_fake_crest, _ = torch.sort(fake_crest, dim=0)
+
+    # 3. 计算排序后的 L1 距离 (消除随机配对导致的方差)
+    peak_distance = functional.l1_loss(sorted_fake_peak, sorted_real_peak)
+    crest_distance = functional.l1_loss(sorted_fake_crest, sorted_real_crest)
+    
     return peak_distance + self.crest_weight * crest_distance
