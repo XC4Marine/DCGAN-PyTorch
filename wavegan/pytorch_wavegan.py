@@ -70,7 +70,12 @@ class WaveGANDiscriminator(nn.Module):
     self.output = nn.Linear(dim * 2 * 8, 1)
 
   def forward(self, waveforms):
+    return self.output(self.forward_features(waveforms)).squeeze(1)
+
+  def forward_features(self, waveforms):
+    """Return the penultimate 1024-dimensional waveform embedding."""
     output = functional.leaky_relu(self.downconv_0(waveforms), negative_slope=0.2)
-    output = phase_shuffle(output, self.phase_shuffle_radius)
+    if self.training:
+      output = phase_shuffle(output, self.phase_shuffle_radius)
     output = functional.leaky_relu(self.downconv_1(output), negative_slope=0.2)
-    return self.output(output.flatten(start_dim=1)).squeeze(1)
+    return output.flatten(start_dim=1)

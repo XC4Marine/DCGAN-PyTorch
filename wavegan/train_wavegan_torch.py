@@ -1,8 +1,10 @@
 """Train a 128-sample WaveGAN with PyTorch and the bundled click WAV files."""
 
 import argparse
+import csv
 from pathlib import Path
 import random
+import re
 
 import numpy as np
 from scipy.io import wavfile
@@ -15,6 +17,20 @@ from pytorch_wavegan import WaveGANDiscriminator, WaveGANGenerator, weights_init
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PULSE_TRAIN_PATTERN = re.compile(r'^PulseTrain_(\d+)_Pulse_\d+$')
+
+
+def load_train_ids(metadata_file, ori_file_num):
+  """Return pulse-train IDs associated with one original file."""
+  train_ids = set()
+  with Path(metadata_file).open(encoding='utf-8-sig', newline='') as handle:
+    for row in csv.DictReader(handle):
+      if int(row['Ori_file_num(No.)']) == ori_file_num:
+        train_ids.add(int(row['Train_num(No.)']))
+  if not train_ids:
+    raise ValueError('No pulse trains found for Ori_file_num={} in {}.'.format(
+        ori_file_num, metadata_file))
+  return train_ids
 
 
 def decode_waveform(path, expected_sample_rate):
@@ -45,8 +61,12 @@ def decode_waveform(path, expected_sample_rate):
 class ClickWaveformDataset(Dataset):
   """One normalized and zero-padded 128-point example per WAV file."""
 
-  def __init__(self, data_dir, sample_rate):
-    self.paths = sorted(path for path in Path(data_dir).rglob('*') if path.suffix.lower() == '.wav')
+  def __init__(self, data_dir, sample_rate, train_ids=None):
+    paths = (path for path in Path(data_dir).rglob('*') if path.suffix.lower() == '.wav')
+    if train_ids is not None:
+      paths = [path for path in paths if (match := PULSE_TRAIN_PATTERN.match(path.stem))
+               and int(match.group(1)) in train_ids]
+    self.paths = sorted(paths)
     if not self.paths:
       raise FileNotFoundError('No WAV files found under {}.'.format(data_dir))
     self.sample_rate = sample_rate
@@ -85,9 +105,11 @@ def save_preview(generator, fixed_noise, output_dir, epoch, sample_rate):
   wavfile.write(str(output_dir / 'preview_epoch_{:04d}.wav'.format(epoch)), sample_rate, encoded)
 
 
-def save_checkpoint(path, epoch, generator, discriminator, generator_optimizer, discriminator_optimizer, args):
+def save_checkpoint(path, epoch, global_step, generator, discriminator, generator_optimizer,
+                    discriminator_optimizer, args):
   torch.save({
       'epoch': epoch,
+      'global_step': global_step,
       'generator': generator.state_dict(),
       'discriminator': discriminator.state_dict(),
       'generator_optimizer': generator_optimizer.state_dict(),
@@ -99,8 +121,11 @@ def save_checkpoint(path, epoch, generator, discriminator, generator_optimizer, 
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument('--data-dir', type=Path, default=PROJECT_ROOT / 'data' / 'wav')
+  parser.add_argument('--metadata-file', type=Path, default=PROJECT_ROOT / 'data' / 'ClickTrains.csv')
+  parser.add_argument('--ori-file-num', type=int)
   parser.add_argument('--output-dir', type=Path, default=Path('train_click_torch'))
   parser.add_argument('--epochs', type=int, default=200)
+  parser.add_argument('--max-update-steps', type=int)
   parser.add_argument('--batch-size', type=int, default=64)
   parser.add_argument('--latent-dim', type=int, default=100)
   parser.add_argument('--model-dim', type=int, default=64)
@@ -135,13 +160,17 @@ def main():
   else:
     print('Using CPU. Install a CUDA-enabled PyTorch build to train on the RTX 4060.')
 
-  dataset = ClickWaveformDataset(args.data_dir, args.sample_rate)
+  train_ids = None if args.ori_file_num is None else load_train_ids(
+      args.metadata_file, args.ori_file_num)
+  dataset = ClickWaveformDataset(args.data_dir, args.sample_rate, train_ids=train_ids)
   loader = DataLoader(
       dataset, batch_size=args.batch_size, shuffle=True, drop_last=True,
       num_workers=args.num_workers, pin_memory=device.type == 'cuda')
   if len(loader) == 0:
     raise ValueError('Batch size {} exceeds dataset size {}.'.format(args.batch_size, len(dataset)))
-  print('Loaded {} click waveforms from {}.'.format(len(dataset), args.data_dir.resolve()))
+  print('Loaded {} click waveforms{} from {}.'.format(
+      len(dataset), '' if args.ori_file_num is None else ' for Ori_file_num={}'.format(args.ori_file_num),
+      args.data_dir.resolve()))
 
   generator = WaveGANGenerator(args.latent_dim, dim=args.model_dim, kernel_len=args.kernel_len).to(device)
   discriminator = WaveGANDiscriminator(dim=args.model_dim, kernel_len=args.kernel_len).to(device)
@@ -150,6 +179,7 @@ def main():
   generator_optimizer = Adam(generator.parameters(), lr=args.learning_rate, betas=(0.5, 0.9))
   discriminator_optimizer = Adam(discriminator.parameters(), lr=args.learning_rate, betas=(0.5, 0.9))
   start_epoch = 1
+  global_step = 0
 
   if args.resume:
     checkpoint = torch.load(str(args.resume), map_location=device, weights_only=False)
@@ -158,16 +188,20 @@ def main():
     generator_optimizer.load_state_dict(checkpoint['generator_optimizer'])
     discriminator_optimizer.load_state_dict(checkpoint['discriminator_optimizer'])
     start_epoch = checkpoint['epoch'] + 1
+    global_step = checkpoint.get('global_step', (start_epoch - 1) * len(loader))
     print('Resumed from {} at epoch {}.'.format(args.resume, start_epoch))
 
   args.output_dir.mkdir(parents=True, exist_ok=True)
   fixed_noise = torch.randn(16, args.latent_dim, device=device)
-  global_step = 0
-  for epoch in range(start_epoch, args.epochs + 1):
+  planned_epochs = args.epochs if args.max_update_steps is None else (
+      (args.max_update_steps + len(loader) - 1) // len(loader))
+  for epoch in range(start_epoch, planned_epochs + 1):
     generator.train()
     discriminator.train()
     generator_loss = None
     for batch_index, real_waveforms in enumerate(loader, 1):
+      if args.max_update_steps is not None and global_step >= args.max_update_steps:
+        break
       real_waveforms = real_waveforms.to(device, non_blocking=True)
       batch_size = real_waveforms.size(0)
 
@@ -188,18 +222,30 @@ def main():
         generator_optimizer.step()
 
       global_step += 1
+      if args.max_update_steps is not None and global_step % args.checkpoint_every == 0:
+        save_checkpoint(
+            args.output_dir / 'wavegan_step_{:06d}.pt'.format(global_step), epoch, global_step,
+            generator, discriminator, generator_optimizer, discriminator_optimizer, args)
       if batch_index % 50 == 0 or batch_index == len(loader):
         generator_value = float('nan') if generator_loss is None else generator_loss.item()
         print(
             'Epoch {}/{} | batch {}/{} | D={:.5f} | G={:.5f}'.format(
                 epoch, args.epochs, batch_index, len(loader), discriminator_loss.item(), generator_value),
             flush=True)
+        if args.max_update_steps is not None:
+          filled = round(30 * global_step / args.max_update_steps)
+          print('Overall progress: [{}{}] {:6.2f}% | update steps {}/{}'.format(
+              '#' * filled, '-' * (30 - filled), 100 * global_step / args.max_update_steps,
+              global_step, args.max_update_steps), flush=True)
 
-    if epoch % args.checkpoint_every == 0:
+    if args.max_update_steps is None and epoch % args.checkpoint_every == 0:
       save_checkpoint(
-          args.output_dir / 'wavegan_epoch_{:04d}.pt'.format(epoch), epoch,
+          args.output_dir / 'wavegan_epoch_{:04d}.pt'.format(epoch), epoch, global_step,
           generator, discriminator, generator_optimizer, discriminator_optimizer, args)
       save_preview(generator, fixed_noise, args.output_dir, epoch, args.sample_rate)
+    if args.max_update_steps is not None and global_step >= args.max_update_steps:
+      print('Reached max update steps ({}).'.format(args.max_update_steps), flush=True)
+      break
 
 
 if __name__ == '__main__':

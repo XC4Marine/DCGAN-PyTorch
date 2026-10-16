@@ -1,0 +1,11 @@
+{
+  "checkpoint": "wavegan_step_200000.pt",
+  "global_step": 200000,
+  "channels": 1,
+  "model_dim": 64,
+  "kernel_len": 25,
+  "phase_shuffle_radius": 2,
+  "sample_rate": 576000,
+  "waveform_length": 128,
+  "embedding_dim": 1024
+}
