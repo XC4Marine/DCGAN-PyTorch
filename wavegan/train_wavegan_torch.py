@@ -118,6 +118,13 @@ def save_checkpoint(path, epoch, global_step, generator, discriminator, generato
   }, str(path))
 
 
+def keep_last_step_checkpoints(output_dir, count):
+  checkpoints = sorted(output_dir.glob('wavegan_step_*.pt'),
+                       key=lambda path: int(path.stem.rsplit('_', 1)[1]))
+  for checkpoint in checkpoints[:-count]:
+    checkpoint.unlink()
+
+
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument('--data-dir', type=Path, default=PROJECT_ROOT / 'data' / 'wav')
@@ -130,6 +137,7 @@ def main():
   parser.add_argument('--latent-dim', type=int, default=100)
   parser.add_argument('--model-dim', type=int, default=64)
   parser.add_argument('--kernel-len', type=int, default=25)
+  parser.add_argument('--phase-shuffle-radius', type=int, default=2)
   parser.add_argument('--sample-rate', type=int, default=576000)
   parser.add_argument('--n-critic', type=int, default=5)
   parser.add_argument('--gradient-penalty', type=float, default=10.0)
@@ -139,6 +147,7 @@ def main():
   parser.add_argument('--device', choices=['auto', 'cuda', 'cpu'], default='auto')
   parser.add_argument('--resume', type=Path)
   parser.add_argument('--checkpoint-every', type=int, default=1)
+  parser.add_argument('--keep-last-checkpoints', type=int)
   args = parser.parse_args()
 
   random.seed(args.seed)
@@ -173,7 +182,9 @@ def main():
       args.data_dir.resolve()))
 
   generator = WaveGANGenerator(args.latent_dim, dim=args.model_dim, kernel_len=args.kernel_len).to(device)
-  discriminator = WaveGANDiscriminator(dim=args.model_dim, kernel_len=args.kernel_len).to(device)
+  discriminator = WaveGANDiscriminator(
+      dim=args.model_dim, kernel_len=args.kernel_len,
+      phase_shuffle_radius=args.phase_shuffle_radius).to(device)
   generator.apply(weights_init)
   discriminator.apply(weights_init)
   generator_optimizer = Adam(generator.parameters(), lr=args.learning_rate, betas=(0.5, 0.9))
@@ -226,6 +237,8 @@ def main():
         save_checkpoint(
             args.output_dir / 'wavegan_step_{:06d}.pt'.format(global_step), epoch, global_step,
             generator, discriminator, generator_optimizer, discriminator_optimizer, args)
+        if args.keep_last_checkpoints is not None:
+          keep_last_step_checkpoints(args.output_dir, args.keep_last_checkpoints)
       if batch_index % 50 == 0 or batch_index == len(loader):
         generator_value = float('nan') if generator_loss is None else generator_loss.item()
         print(

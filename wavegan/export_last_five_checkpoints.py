@@ -1,12 +1,16 @@
 """Export Ori10 originals and samples from the final five WaveGAN checkpoints."""
 
 import argparse
+import pathlib
 from pathlib import Path
 import shutil
+import sys
 
 import numpy as np
 from scipy.io import wavfile
 import torch
+
+sys.modules.setdefault('pathlib._local', pathlib)
 
 from pytorch_wavegan import WaveGANGenerator
 from train_wavegan_torch import ClickWaveformDataset, load_train_ids
